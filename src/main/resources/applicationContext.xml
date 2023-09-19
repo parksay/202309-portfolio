@@ -18,7 +18,7 @@
     </bean>
 
     <bean id="articleDao" class="simple.myboard.myprac.dao.ArticleDaoJdbc">
-
+        <property name="dataSource" ref="dataSource" />
     </bean>
 
 </beans>

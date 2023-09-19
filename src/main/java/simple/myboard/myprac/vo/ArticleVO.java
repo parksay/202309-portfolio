@@ -7,8 +7,8 @@ public class ArticleVO {
     private String title;
     private String contents;
     private int isDel;
-    String createTime;
-    String changeTime;
+    private String createTime;
+    private String changeTime;
 
 
     public ArticleVO() {

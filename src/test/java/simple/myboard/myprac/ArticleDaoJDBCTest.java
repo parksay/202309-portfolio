@@ -34,11 +34,11 @@ public class ArticleDaoJDBCTest {
         this.dao = context.getBean("articleDao", ArticleDao.class);
         //
         articleList = Arrays.asList(
-                new ArticleVO(0, "testTitle01", "testContents01"),
-                new ArticleVO(0, "testTitle02", "testContents02"),
-                new ArticleVO(1, "testTitle03", "testContents03"),
-                new ArticleVO(1, "testTitle04", "testContents04"),
-                new ArticleVO(2, "testTitle05", "testContents05")
+                new ArticleVO(1, "testTitle01", "testContents01"),
+                new ArticleVO(1, "testTitle02", "testContents02"),
+                new ArticleVO(2, "testTitle03", "testContents03"),
+                new ArticleVO(2, "testTitle04", "testContents04"),
+                new ArticleVO(3, "testTitle05", "testContents05")
         );
         //
     }
@@ -47,17 +47,18 @@ public class ArticleDaoJDBCTest {
     public void insertArticleTest() {
         //
         this.dao.deleteAllArticle();
+        Assertions.assertEquals(0, this.dao.getCountArticle());
         //
         this.dao.insertArticle(this.articleList.get(0));
-        Assertions.assertEquals(0, this.dao.getCountArticle());
-        this.dao.insertArticle(this.articleList.get(1));
         Assertions.assertEquals(1, this.dao.getCountArticle());
-        this.dao.insertArticle(this.articleList.get(2));
+        this.dao.insertArticle(this.articleList.get(1));
         Assertions.assertEquals(2, this.dao.getCountArticle());
+        this.dao.insertArticle(this.articleList.get(2));
+        Assertions.assertEquals(3, this.dao.getCountArticle());
         //
-        Assertions.assertEquals(this.articleList.get(0).getContents(), this.dao.getArticle(0).getContents());
-        Assertions.assertEquals(this.articleList.get(1).getContents(), this.dao.getArticle(1).getContents());
-        Assertions.assertEquals(this.articleList.get(2).getContents(), this.dao.getArticle(2).getContents());
+        Assertions.assertEquals(this.articleList.get(0).getContents(), this.dao.getArticle(1).getContents());
+        Assertions.assertEquals(this.articleList.get(1).getContents(), this.dao.getArticle(2).getContents());
+        Assertions.assertEquals(this.articleList.get(2).getContents(), this.dao.getArticle(3).getContents());
     }
 
     @Test
@@ -82,7 +83,8 @@ public class ArticleDaoJDBCTest {
 
     @Test
     public void deleteAllArticleTest() {
-
+        this.dao.deleteAllArticle();
+        Assertions.assertEquals(0, this.dao.getCountArticle());
     }
 
 }
