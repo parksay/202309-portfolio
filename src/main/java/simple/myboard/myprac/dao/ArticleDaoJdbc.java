@@ -11,6 +11,8 @@ import simple.myboard.myprac.vo.ArticleVO;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class ArticleDaoJdbc implements ArticleDao {
 
@@ -26,8 +28,15 @@ public class ArticleDaoJdbc implements ArticleDao {
             article.setTitle(rs.getString("title"));
             article.setContents(rs.getString("contents"));
             article.setIsDel(rs.getInt("is_del"));
-            article.setCreateTime(rs.getString("create_time"));
-            article.setChangeTime(rs.getString("change_time"));
+            String datePattern = "yyyy-MM-dd hh:mm:ss";
+            SimpleDateFormat formatter = new SimpleDateFormat(datePattern);
+            try {
+                article.setCreateTime(formatter.parse(rs.getString("create_time")));
+                article.setUpdateTime(formatter.parse(rs.getString("update_time")));
+            } catch (ParseException e) {
+                logger.debug("TB_ARTICLE Date ParseException");
+                throw new SQLException();
+            }
             return article;
         }
     };
@@ -41,9 +50,9 @@ public class ArticleDaoJdbc implements ArticleDao {
     @Override
     public void insertArticle(ArticleVO article) {
         this.jdbcTemplate.update("INSERT INTO TB_ARTICLE (" +
-                        " member_seq, title, contents " +
-                        ") VALUES ( ?, ?, ?)",
-                article.getMemberSeq(), article.getTitle(), article.getContents());
+                        " member_seq, title, contents, is_del, create_time, update_time " +
+                        ") VALUES ( ?, ?, ?, ?, ?, ?)",
+                article.getMemberSeq(), article.getTitle(), article.getContents(), article.getIsDel(), article.getCreateTime(), article.getUpdateTime());
     }
 
     @Override
@@ -83,5 +92,24 @@ public class ArticleDaoJdbc implements ArticleDao {
     @Override
     public void deleteAllArticle() {
         this.jdbcTemplate.update("DELETE FROM TB_ARTICLE");
+    }
+
+    @Override
+    public int getLastIndexArticle() {
+        return this.jdbcTemplate.query(
+                new PreparedStatementCreator() {
+                    @Override
+                    public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                        return con.prepareStatement("SELECT MAX(ARTICLE_SEQ) FROM TB_ARTICLE");
+                    }
+                },
+                new ResultSetExtractor<Integer>() {
+                    @Override
+                    public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
+                        rs.next();
+                        return rs.getInt(1);
+                    }
+                }
+        );
     }
 }
