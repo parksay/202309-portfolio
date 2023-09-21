@@ -4,16 +4,14 @@ package simple.myboard.myprac;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import simple.myboard.myprac.dao.ArticleDao;
+import simple.myboard.myprac.dao.ArticleDaoJdbc;
 import simple.myboard.myprac.vo.ArticleVO;
 
+import javax.sql.DataSource;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -21,20 +19,22 @@ import java.util.Date;
 import java.util.List;
 
 
-@ExtendWith(SpringExtension.class)
+//@ExtendWith(SpringExtension.class)
 //@ContextConfiguration(locations = {"file:src/main/resources/applicationContext.xml"})
 public class ArticleDaoJDBCTest {
 
     private static final Logger logger = LoggerFactory.getLogger(ArticleDaoJDBCTest.class);
 
-    private ArticleDao dao;
+    private ArticleDaoJdbc dao;
     List<ArticleVO> articleList;
 
     @BeforeEach
     public void setUp() throws ParseException {
         //
         ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
-        this.dao = context.getBean("articleDao", ArticleDao.class);
+        DataSource dataSource = context.getBean("dataSource", DataSource.class);
+        this.dao = new ArticleDaoJdbc();
+        this.dao.setDataSource(dataSource);
         //
         String pattern = "yyyyMMddhhmmss";
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
@@ -113,6 +113,7 @@ public class ArticleDaoJDBCTest {
         Assertions.assertEquals(lastIndex-2, this.dao.getLastIndexArticle());
         this.dao.deleteArticle(lastIndex-2);
         Assertions.assertEquals(lastIndex-3, this.dao.getLastIndexArticle());
+        this.dao.deleteArticle(lastIndex-3);
     }
 
     @Test
