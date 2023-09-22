@@ -57,7 +57,22 @@ public class ArticleDaoJdbc implements ArticleDao {
 
     @Override
     public void updateArticle(ArticleVO article) {
-
+        this.jdbcTemplate.update(
+                "UPDATE TB_ARTICLE SET" +
+                        " member_seq = ?," +
+                        " title = ?," +
+                        " contents = ?, " +
+                        " is_del = ?, " +
+                        " create_time = ?, " +
+                        " update_time = ? " +
+                    "WHERE article_seq = ? ",
+                article.getMemberSeq(),
+                article.getTitle(),
+                article.getContents(),
+                article.getIsDel(),
+                article.getCreateTime(),
+                article.getUpdateTime(),
+                article.getArticleSeq());
     }
 
     @Override
