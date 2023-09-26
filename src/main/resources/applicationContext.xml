@@ -21,4 +21,17 @@
         <property name="dataSource" ref="dataSource" />
     </bean>
 
+<!--    <bean id="templateResolver" class="org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver">-->
+<!--        <property name="prefix" value="classpath:/templates/" />-->
+<!--        <property name="suffix" value=".html" />-->
+<!--        <property name="templateMode" value="HTML" />-->
+<!--        <property name="cacheable" value="true" />-->
+<!--    </bean>-->
+<!--    <bean id="templateEngine" class="org.thymeleaf.spring6.SpringTemplateEngine" >-->
+<!--        <property name="templateResolver" ref="templateResolver"/>-->
+<!--    </bean>-->
+<!--    <bean class="org.thymeleaf.spring6.view.ThymeleafViewResolver">-->
+<!--        <property name="templateEngine" ref="templateEngine" />-->
+<!--    </bean>-->
+
 </beans>
