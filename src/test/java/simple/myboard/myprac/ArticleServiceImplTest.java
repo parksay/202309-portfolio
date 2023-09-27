@@ -8,10 +8,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
+import org.springframework.dao.TransientDataAccessResourceException;
 import simple.myboard.myprac.dao.ArticleDao;
+import simple.myboard.myprac.dao.ArticleDaoJdbc;
+import simple.myboard.myprac.service.ArticleService;
 import simple.myboard.myprac.serviceimpl.ArticleServiceImpl;
 import simple.myboard.myprac.vo.ArticleVO;
 
+import javax.sql.DataSource;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -118,4 +122,28 @@ public class ArticleServiceImplTest {
         Assertions.assertEquals(formatter.format(article2.getUpdateTime()), formatter.format(new Date()));
     }
 
+
+
+
+    @Test
+    public void getArticleTransactionTest() {
+        //
+        ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
+        DataSource dataSourceTest = context.getBean("dataSource", DataSource.class);
+        ArticleDaoJdbc articleDaoTest = new ArticleTestDao();
+        articleDaoTest.setDataSource(dataSourceTest);
+        ArticleService articleServiceTest = context.getBean("articleService", ArticleService.class);
+        articleServiceTest.setArticleDao(articleDaoTest);
+        //
+        Assertions.assertThrows(TransientDataAccessResourceException.class,
+                ()->{ articleServiceTest.getArticleBySeq(0); });
+    }
+
+    public static class ArticleTestDao extends ArticleDaoJdbc {
+        @Override
+        public ArticleVO getArticle(int articleSeq) {
+            super.insertArticle(new ArticleVO(1, "testTitle01", "testContents01"));
+            return null;
+        }
+    }
 }

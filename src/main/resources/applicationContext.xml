@@ -21,17 +21,22 @@
         <property name="dataSource" ref="dataSource" />
     </bean>
 
-<!--    <bean id="templateResolver" class="org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver">-->
-<!--        <property name="prefix" value="classpath:/templates/" />-->
-<!--        <property name="suffix" value=".html" />-->
-<!--        <property name="templateMode" value="HTML" />-->
-<!--        <property name="cacheable" value="true" />-->
-<!--    </bean>-->
-<!--    <bean id="templateEngine" class="org.thymeleaf.spring6.SpringTemplateEngine" >-->
-<!--        <property name="templateResolver" ref="templateResolver"/>-->
-<!--    </bean>-->
-<!--    <bean class="org.thymeleaf.spring6.view.ThymeleafViewResolver">-->
-<!--        <property name="templateEngine" ref="templateEngine" />-->
-<!--    </bean>-->
+    <bean id="articleService" class="simple.myboard.myprac.serviceimpl.ArticleServiceImpl">
+        <property name="articleDao" ref="articleDao" />
+    </bean>
+
+    <bean name="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager" >
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <tx:advice id="transactionAdvice" transaction-manager="transactionManager" >
+        <tx:attributes>
+            <tx:method name="get*" propagation="REQUIRED" read-only="true" timeout="30"/>
+        </tx:attributes>
+    </tx:advice>
+    <aop:config>
+        <aop:advisor advice-ref="transactionAdvice" pointcut="execution(* *..*ServiceImpl.*(..))"/>
+    </aop:config>
+
 
 </beans>
