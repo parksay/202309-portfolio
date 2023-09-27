@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-
+// TODO: class 전체에 rollback 트랜잭션 걸어두기
 //@ExtendWith(SpringExtension.class)
 //@ContextConfiguration(locations = {"file:src/main/resources/applicationContext.xml"})
 public class ArticleDaoJdbcTest {
