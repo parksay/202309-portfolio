@@ -21,9 +21,9 @@ import java.util.List;
 
 //@ExtendWith(SpringExtension.class)
 //@ContextConfiguration(locations = {"file:src/main/resources/applicationContext.xml"})
-public class ArticleDaoJDBCTest {
+public class ArticleDaoJdbcTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(ArticleDaoJDBCTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(ArticleDaoJdbcTest.class);
 
     private ArticleDaoJdbc dao;
     List<ArticleVO> articleList;
