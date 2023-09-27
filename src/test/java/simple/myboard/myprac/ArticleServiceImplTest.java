@@ -25,7 +25,7 @@ import java.util.List;
 //@ContextConfiguration(locations = {"file:src/main/resources/applicationContext.xml"})
 public class ArticleServiceImplTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(ArticleDaoJDBCTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(ArticleDaoJdbcTest.class);
 
     List<ArticleVO> articleList;
     private ArticleDao dao;
