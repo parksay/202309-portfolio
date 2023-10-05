@@ -147,21 +147,7 @@ public class ArticleDaoJdbcTest {
         Assertions.assertEquals(0, this.dao.getCountArticle());
     }
 
-    @Test
-    public void dateTest() throws ParseException {
-        String pattern = "yyyy-MM-dd hh:mm:ss";
-        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
-        Date result1 = formatter.parse("2023-09-20 14:08:22");
-        Date result2 = formatter.parse("2023-09-20 14:08:22");
-        Date result3 = formatter.parse("2023-09-20 14:08:23");
-        Assertions.assertEquals(result1, result2);
-        Assertions.assertNotEquals(result1, result3);
-
-    }
-
     private void checkSameArticle(ArticleVO article1, ArticleVO article2) {
-        System.out.println("############# article1.getCreateTime().getTime() = " + article1.getCreateTime().getTime());
-        System.out.println("############# article2.getCreateTime().getTime() = " + article2.getCreateTime().getTime());
         Assertions.assertEquals(article1.getArticleSeq(), article2.getArticleSeq());
         Assertions.assertEquals(article1.getMemberSeq(), article2.getMemberSeq());
         Assertions.assertEquals(article1.getTitle(), article2.getTitle());
