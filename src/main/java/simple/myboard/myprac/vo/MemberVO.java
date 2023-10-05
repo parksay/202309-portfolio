@@ -13,6 +13,16 @@ public class MemberVO {
     private Date updateTime;
 
 
+    public MemberVO() {
+    }
+
+    public MemberVO(String userId, String userPsw, String userName) {
+        this.userId = userId;
+        this.userPsw = userPsw;
+        this.userName = userName;
+    }
+
+
     public MemberVO(String userId, String userPsw, String userName, int isDel, Date createTime, Date updateTime) {
         this.userId = userId;
         this.userPsw = userPsw;
@@ -20,12 +30,6 @@ public class MemberVO {
         this.isDel = isDel;
         this.createTime = createTime;
         this.updateTime = updateTime;
-    }
-
-    public MemberVO(String userId, String userPsw, String userName) {
-        this.userId = userId;
-        this.userPsw = userPsw;
-        this.userName = userName;
     }
 
     public int getMemberSeq() {
