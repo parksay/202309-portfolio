@@ -28,10 +28,10 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     public ArticleVO getArticleBySeq(int seq) {
-        return this.articleDao.getArticle(seq);
+        return this.articleDao.getArticleBySeq(seq);
     }
 
     public void delteArticle(int articleSeq) {
-        this.articleDao.deleteArticle(articleSeq);
+        this.articleDao.deleteArticleBySeq(articleSeq);
     }
 }

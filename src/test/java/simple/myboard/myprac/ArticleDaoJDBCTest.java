@@ -40,11 +40,11 @@ public class ArticleDaoJdbcTest {
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
         //
         articleList = Arrays.asList(
-                new ArticleVO(1, "testTitle01", "testContents01", 0, formatter.parse("20230920140811"), formatter.parse("20230920140811")),
-                new ArticleVO(1, "testTitle02", "testContents02", 0, formatter.parse("20230920140822"), formatter.parse("20230920140822")),
-                new ArticleVO(2, "testTitle03", "testContents03", 0, formatter.parse("20230920140833"), formatter.parse("20230920140833")),
-                new ArticleVO(2, "testTitle04", "testContents04", 0, formatter.parse("20230920140844"), formatter.parse("20230920140844")),
-                new ArticleVO(3, "testTitle05", "testContents05", 0, formatter.parse("20230920140855"), formatter.parse("20230920140855"))
+                new ArticleVO(93, "testTitle01", "testContents01", 0, formatter.parse("20230920140811"), formatter.parse("20230920140811")),
+                new ArticleVO(93, "testTitle02", "testContents02", 0, formatter.parse("20230920140822"), formatter.parse("20230920140822")),
+                new ArticleVO(94, "testTitle03", "testContents03", 0, formatter.parse("20230920140833"), formatter.parse("20230920140833")),
+                new ArticleVO(94, "testTitle04", "testContents04", 0, formatter.parse("20230920140844"), formatter.parse("20230920140844")),
+                new ArticleVO(95, "testTitle05", "testContents05", 0, formatter.parse("20230920140855"), formatter.parse("20230920140855"))
         );
         //
     }
@@ -63,13 +63,38 @@ public class ArticleDaoJdbcTest {
         Assertions.assertEquals(3, this.dao.getCountArticle());
         //
         int lastIndex = this.dao.getLastIndexArticle();
-        Assertions.assertEquals(this.articleList.get(0).getContents(), this.dao.getArticle(lastIndex-2).getContents());
-        Assertions.assertEquals(this.articleList.get(1).getContents(), this.dao.getArticle(lastIndex-1).getContents());
-        Assertions.assertEquals(this.articleList.get(2).getContents(), this.dao.getArticle(lastIndex).getContents());
+        Assertions.assertEquals(this.articleList.get(0).getContents(), this.dao.getArticleBySeq(lastIndex-2).getContents());
+        Assertions.assertEquals(this.articleList.get(1).getContents(), this.dao.getArticleBySeq(lastIndex-1).getContents());
+        Assertions.assertEquals(this.articleList.get(2).getContents(), this.dao.getArticleBySeq(lastIndex).getContents());
     }
 
     @Test
     public void updateArticleTest() {
+        //
+        this.dao.deleteAllArticle();
+        //
+        ArticleVO article0 = this.articleList.get(0);
+        this.dao.insertArticle(article0);
+        int lastIndex1 = this.dao.getLastIndexArticle();
+        article0.setArticleSeq(lastIndex1);
+        ArticleVO article1 = this.dao.getArticleBySeq(lastIndex1);
+        this.checkSameArticle(article0, article1);
+        //
+        String newTitle = "this is new title";
+        String newContents = "this is new contents";
+        Date newTime = new Date(1696484519 * 1000L);
+        article1.setTitle(newTitle);
+        article1.setContents(newContents);
+        article1.setCreateTime(newTime);
+        article1.setUpdateTime(newTime);
+        //
+        this.dao.updateArticle(article1);
+        int lastIndex2 = this.dao.getLastIndexArticle();
+        ArticleVO article2 = this.dao.getArticleBySeq(lastIndex2);
+
+        //
+        this.checkSameArticle(article1, article2);
+
 
     }
 
@@ -82,8 +107,8 @@ public class ArticleDaoJdbcTest {
         this.dao.insertArticle(article2);
         //
         int lastIndex = this.dao.getLastIndexArticle();
-        ArticleVO article3 = this.dao.getArticle(lastIndex-1);
-        ArticleVO article4 = this.dao.getArticle(lastIndex);
+        ArticleVO article3 = this.dao.getArticleBySeq(lastIndex-1);
+        ArticleVO article4 = this.dao.getArticleBySeq(lastIndex);
         // check same
         article1.setArticleSeq(lastIndex-1);
         article2.setArticleSeq(lastIndex);
@@ -107,13 +132,13 @@ public class ArticleDaoJdbcTest {
         //
         int lastIndex = this.dao.getLastIndexArticle();
         //
-        this.dao.deleteArticle(lastIndex);
+        this.dao.deleteArticleBySeq(lastIndex);
         Assertions.assertEquals(lastIndex-1, this.dao.getLastIndexArticle());
-        this.dao.deleteArticle(lastIndex-1);
+        this.dao.deleteArticleBySeq(lastIndex-1);
         Assertions.assertEquals(lastIndex-2, this.dao.getLastIndexArticle());
-        this.dao.deleteArticle(lastIndex-2);
+        this.dao.deleteArticleBySeq(lastIndex-2);
         Assertions.assertEquals(lastIndex-3, this.dao.getLastIndexArticle());
-        this.dao.deleteArticle(lastIndex-3);
+        this.dao.deleteArticleBySeq(lastIndex-3);
     }
 
     @Test
@@ -135,6 +160,8 @@ public class ArticleDaoJdbcTest {
     }
 
     private void checkSameArticle(ArticleVO article1, ArticleVO article2) {
+        System.out.println("############# article1.getCreateTime().getTime() = " + article1.getCreateTime().getTime());
+        System.out.println("############# article2.getCreateTime().getTime() = " + article2.getCreateTime().getTime());
         Assertions.assertEquals(article1.getArticleSeq(), article2.getArticleSeq());
         Assertions.assertEquals(article1.getMemberSeq(), article2.getMemberSeq());
         Assertions.assertEquals(article1.getTitle(), article2.getTitle());

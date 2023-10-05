@@ -141,7 +141,7 @@ public class ArticleServiceImplTest {
 
     public static class ArticleTestDao extends ArticleDaoJdbc {
         @Override
-        public ArticleVO getArticle(int articleSeq) {
+        public ArticleVO getArticleBySeq(int articleSeq) {
             super.insertArticle(new ArticleVO(1, "testTitle01", "testContents01"));
             return null;
         }

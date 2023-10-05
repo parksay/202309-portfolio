@@ -6,8 +6,8 @@ public interface ArticleDao {
 
     public abstract void insertArticle(ArticleVO article);
     public abstract void updateArticle(ArticleVO article);
-    public abstract ArticleVO getArticle(int articleSeq);
-    public abstract void deleteArticle(int articleSeq);
+    public abstract ArticleVO getArticleBySeq(int articleSeq);
+    public abstract void deleteArticleBySeq(int articleSeq);
     public abstract int getCountArticle();
     public abstract void deleteAllArticle();
     public abstract int getLastIndexArticle();

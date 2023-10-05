@@ -58,9 +58,9 @@ public class ArticleDaoJdbc implements ArticleDao {
     @Override
     public void updateArticle(ArticleVO article) {
         this.jdbcTemplate.update(
-                "UPDATE TB_ARTICLE SET" +
-                        " member_seq = ?," +
-                        " title = ?," +
+                "UPDATE TB_ARTICLE SET " +
+                        " member_seq = ?, " +
+                        " title = ?, " +
                         " contents = ?, " +
                         " is_del = ?, " +
                         " create_time = ?, " +
@@ -76,12 +76,12 @@ public class ArticleDaoJdbc implements ArticleDao {
     }
 
     @Override
-    public ArticleVO getArticle(int articleSeq) {
+    public ArticleVO getArticleBySeq(int articleSeq) {
         return this.jdbcTemplate.queryForObject("SELECT * FROM TB_ARTICLE WHERE article_seq = ?", this.rowMapper, new Object[] {articleSeq});
     }
 
     @Override
-    public void deleteArticle(int articleSeq) {
+    public void deleteArticleBySeq(int articleSeq) {
         this.jdbcTemplate.update("DELETE FROM TB_ARTICLE WHERE article_seq = ?", articleSeq);
     }
 
@@ -91,7 +91,7 @@ public class ArticleDaoJdbc implements ArticleDao {
                 new PreparedStatementCreator() {
                     @Override
                     public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                        return con.prepareStatement("SELECT count(*) FROM TB_ARTICLE");
+                        return con.prepareStatement("SELECT COUNT(*) FROM TB_ARTICLE");
                     }
                 },
                 new ResultSetExtractor<Integer>() {
