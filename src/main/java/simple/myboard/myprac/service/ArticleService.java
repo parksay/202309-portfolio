@@ -3,8 +3,6 @@ package simple.myboard.myprac.service;
 import simple.myboard.myprac.dao.ArticleDao;
 import simple.myboard.myprac.vo.ArticleVO;
 
-import java.util.Date;
-
 public interface ArticleService {
 
 
@@ -16,6 +14,6 @@ public interface ArticleService {
 
     public abstract ArticleVO getArticleBySeq(int seq);
 
-    public abstract void delteArticle(int articleSeq);
+    public abstract void deleteArticleBySeq(int articleSeq);
 
 }

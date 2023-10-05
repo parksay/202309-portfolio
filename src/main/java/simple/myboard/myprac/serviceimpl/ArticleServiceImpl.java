@@ -31,7 +31,7 @@ public class ArticleServiceImpl implements ArticleService {
         return this.articleDao.getArticleBySeq(seq);
     }
 
-    public void delteArticle(int articleSeq) {
+    public void deleteArticleBySeq(int articleSeq) {
         this.articleDao.deleteArticleBySeq(articleSeq);
     }
 }

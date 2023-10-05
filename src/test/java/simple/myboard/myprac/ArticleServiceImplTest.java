@@ -78,13 +78,13 @@ public class ArticleServiceImplTest {
         int lastIndex = this.dao.getLastIndexArticle();
         //
         Assertions.assertEquals(4, this.dao.getCountArticle());
-        this.service.delteArticle(lastIndex);
+        this.service.deleteArticleBySeq(lastIndex);
         Assertions.assertEquals(3, this.dao.getCountArticle());
-        this.service.delteArticle(lastIndex-1);
+        this.service.deleteArticleBySeq(lastIndex-1);
         Assertions.assertEquals(2, this.dao.getCountArticle());
-        this.service.delteArticle(lastIndex-2);
+        this.service.deleteArticleBySeq(lastIndex-2);
         Assertions.assertEquals(1, this.dao.getCountArticle());
-        this.service.delteArticle(lastIndex-3);
+        this.service.deleteArticleBySeq(lastIndex-3);
         Assertions.assertEquals(0, this.dao.getCountArticle());
 
 
