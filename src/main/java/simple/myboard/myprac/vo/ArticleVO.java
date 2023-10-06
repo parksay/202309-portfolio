@@ -12,6 +12,7 @@ public class ArticleVO {
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 
+    // TODO : audit 항목 공틍 인터페이스 만들고 service 단에서도 add 나 update 시에 공통 필터 거치도록 만들기 > 데코레이터 패턴으로 되려나
 
     public ArticleVO() {
     }

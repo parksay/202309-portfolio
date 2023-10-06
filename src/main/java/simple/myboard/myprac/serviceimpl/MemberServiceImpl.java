@@ -7,7 +7,6 @@ import simple.myboard.myprac.service.MemberService;
 import simple.myboard.myprac.vo.MemberVO;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class MemberServiceImpl implements MemberService {
     private MemberDao memberDao;

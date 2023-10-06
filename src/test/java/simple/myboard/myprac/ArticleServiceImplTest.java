@@ -122,7 +122,7 @@ public class ArticleServiceImplTest {
 
 
     @Test
-    public void getArticleTransactionTest() {
+    public void getArticleReadOnlyTransactionTest() {
         //
         ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
         DataSource dataSourceTest = context.getBean("dataSource", DataSource.class);
@@ -143,5 +143,4 @@ public class ArticleServiceImplTest {
         }
     }
 
-    // TODO : delete failure (integrity)
 }

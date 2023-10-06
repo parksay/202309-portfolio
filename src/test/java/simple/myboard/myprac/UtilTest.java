@@ -84,8 +84,6 @@ public class UtilTest {
         // HH 는 밀리터리 시간으로 1-24 사이 숫자를 입력할 수 있음 
         DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
         Assertions.assertThrows(DateTimeParseException.class, ()->{LocalDateTime.parse(targetTime, formatter2);});
-        
-
 
     }
 
