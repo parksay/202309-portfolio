@@ -8,8 +8,8 @@ import org.springframework.context.support.GenericXmlApplicationContext;
 import simple.myboard.myprac.dao.MemberDaoJdbc;
 import simple.myboard.myprac.vo.MemberVO;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 // TODO : rollback transaction 다 넣고 deleteAll 지우기
@@ -22,7 +22,7 @@ public class MemberDaoJdbcTest {
     public void setUp() {
         ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
         this.memberDao = context.getBean("memberDao", MemberDaoJdbc.class);
-        Date newTime = new Date(1696484519 * 1000L);
+        LocalDateTime newTime = LocalDateTime.of(2023, 10, 6, 14, 26, 47);
         memberList = Arrays.asList(
                 new MemberVO("testid01", "testpsw01", "testname01", 0, newTime, newTime),
                 new MemberVO("testid02", "testpsw02", "testname02", 0, newTime, newTime),
@@ -89,7 +89,7 @@ public class MemberDaoJdbcTest {
         member1.setUserPsw("newPsw");
         member1.setUserName("newName");
         member1.setIsDel(1);
-        Date newTime = new Date(1710454331 * 1000L);
+        LocalDateTime newTime = LocalDateTime.of(2023, 3, 13, 16, 52, 22);
         member1.setCreateTime(newTime);
         member1.setUpdateTime(newTime);
         this.memberDao.updateMember(member1);

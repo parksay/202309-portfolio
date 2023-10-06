@@ -1,6 +1,6 @@
 package simple.myboard.myprac.vo;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class ArticleVO {
 
@@ -9,8 +9,8 @@ public class ArticleVO {
     private String title;
     private String contents;
     private int isDel;
-    private Date createTime;
-    private Date updateTime;
+    private LocalDateTime createTime;
+    private LocalDateTime updateTime;
 
 
     public ArticleVO() {
@@ -22,7 +22,7 @@ public class ArticleVO {
         this.contents = contents;
     }
 
-    public ArticleVO(int memberSeq, String title, String contents, int isDel, Date createTime, Date updateTime) {
+    public ArticleVO(int memberSeq, String title, String contents, int isDel, LocalDateTime createTime, LocalDateTime updateTime) {
         this.articleSeq = articleSeq;
         this.memberSeq = memberSeq;
         this.title = title;
@@ -72,19 +72,19 @@ public class ArticleVO {
         this.isDel = isDel;
     }
 
-    public Date getCreateTime() {
+    public LocalDateTime getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
     }
 
-    public Date getUpdateTime() {
+    public LocalDateTime getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
     }
 }

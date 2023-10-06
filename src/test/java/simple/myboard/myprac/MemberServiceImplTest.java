@@ -9,6 +9,7 @@ import simple.myboard.myprac.dao.MemberDaoJdbc;
 import simple.myboard.myprac.serviceimpl.MemberServiceImpl;
 import simple.myboard.myprac.vo.MemberVO;
 
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,6 +37,8 @@ public class MemberServiceImplTest {
                 new MemberVO("testid04", "testpsw04", "testname04"),
                 new MemberVO("testid05", "testpsw05", "testname05")
         );
+        this.memberDao.deleteAllMember();
+
     }
 
 
@@ -71,5 +74,38 @@ public class MemberServiceImplTest {
     }
 
 
-    // TODO: update / delete / deleteFailure(integrity) // transaction
+    @Test
+    public void updateMemberTest() {
+        //
+        MemberVO member0 = this.memberList.get(0);
+        this.memberService.addMember(member0);
+        int lastIndex1 = this.memberDao.getLastIndexMember();
+        MemberVO member1 = this.memberService.getMemberBySeq(lastIndex1);
+        this.checkSameMember(member0, member1);
+
+        //
+        member1.setUserId("newId");
+        member1.setUserPsw("newPsw");
+        member1.setUserName("newName");
+        member1.setIsDel(1);
+        this.memberService.updateMember(member1);
+        //
+        int lastIndex2 = this.memberDao.getLastIndexMember();
+        Assertions.assertEquals(lastIndex2, lastIndex1);
+        MemberVO member2 = this.memberService.getMemberBySeq(lastIndex2);
+        this.checkSameMember(member1, member2);
+    }
+
+    private void checkSameMember(MemberVO member1, MemberVO member2) {
+        Assertions.assertEquals(member1.getUserId(), member2.getUserId());
+        Assertions.assertEquals(member1.getUserPsw(), member2.getUserPsw());
+        Assertions.assertEquals(member1.getUserName(), member2.getUserName());
+        Assertions.assertEquals(member1.getIsDel(), member2.getIsDel());
+        Assertions.assertEquals(member1.getCreateTime().truncatedTo(ChronoUnit.MINUTES), member2.getCreateTime().truncatedTo(ChronoUnit.MINUTES));
+        Assertions.assertEquals(member1.getUpdateTime().truncatedTo(ChronoUnit.MINUTES), member2.getUpdateTime().truncatedTo(ChronoUnit.MINUTES));
+
+    }
+
+
+    // TODO: delete / deleteFailure(integrity) // transaction
 }

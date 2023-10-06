@@ -6,6 +6,7 @@ import simple.myboard.myprac.dao.MemberDao;
 import simple.myboard.myprac.service.MemberService;
 import simple.myboard.myprac.vo.MemberVO;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class MemberServiceImpl implements MemberService {
@@ -31,13 +32,14 @@ public class MemberServiceImpl implements MemberService {
         // 최초 등록 시 0
         member.setIsDel(0);
         // 날짜 넣어주기
-        member.setCreateTime(new Date());
-        member.setUpdateTime(new Date());
+        LocalDateTime nowTime = LocalDateTime.now();
+        member.setCreateTime(nowTime);
+        member.setUpdateTime(nowTime);
         this.memberDao.insertMember(member);
     }
 
     public void updateMember(MemberVO member) {
-        member.setUpdateTime(new Date());
+        member.setUpdateTime(LocalDateTime.now());
         this.memberDao.updateMember(member);
     }
 

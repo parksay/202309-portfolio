@@ -13,9 +13,9 @@ import simple.myboard.myprac.vo.ArticleVO;
 
 import javax.sql.DataSource;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 // TODO: class 전체에 rollback 트랜잭션 걸어두기
@@ -36,15 +36,15 @@ public class ArticleDaoJdbcTest {
         this.dao = new ArticleDaoJdbc();
         this.dao.setDataSource(dataSource);
         //
-        String pattern = "yyyyMMddhhmmss";
-        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         //
         articleList = Arrays.asList(
-                new ArticleVO(93, "testTitle01", "testContents01", 0, formatter.parse("20230920140811"), formatter.parse("20230920140811")),
-                new ArticleVO(93, "testTitle02", "testContents02", 0, formatter.parse("20230920140822"), formatter.parse("20230920140822")),
-                new ArticleVO(94, "testTitle03", "testContents03", 0, formatter.parse("20230920140833"), formatter.parse("20230920140833")),
-                new ArticleVO(94, "testTitle04", "testContents04", 0, formatter.parse("20230920140844"), formatter.parse("20230920140844")),
-                new ArticleVO(95, "testTitle05", "testContents05", 0, formatter.parse("20230920140855"), formatter.parse("20230920140855"))
+                new ArticleVO(130, "testTitle01", "testContents01", 0, LocalDateTime.parse("2023-09-20 14:08:11", formatter), LocalDateTime.parse("2023-09-20 14:08:11", formatter)),
+                new ArticleVO(130, "testTitle02", "testContents02", 0, LocalDateTime.parse("2023-09-20 14:08:22", formatter), LocalDateTime.parse("2023-09-20 14:08:22", formatter)),
+                new ArticleVO(130, "testTitle03", "testContents03", 0, LocalDateTime.parse("2023-09-20 14:08:33", formatter), LocalDateTime.parse("2023-09-20 14:08:33", formatter)),
+                new ArticleVO(130, "testTitle04", "testContents04", 0, LocalDateTime.parse("2023-09-20 14:08:44", formatter), LocalDateTime.parse("2023-09-20 14:08:44", formatter)),
+                new ArticleVO(130, "testTitle05", "testContents05", 0, LocalDateTime.parse("2023-09-20 14:08:55", formatter), LocalDateTime.parse("2023-09-20 14:08:55", formatter))
         );
         //
     }
@@ -82,7 +82,7 @@ public class ArticleDaoJdbcTest {
         //
         String newTitle = "this is new title";
         String newContents = "this is new contents";
-        Date newTime = new Date(1696484519 * 1000L);
+        LocalDateTime newTime = LocalDateTime.of(2023,10,6,13,26,17);
         article1.setTitle(newTitle);
         article1.setContents(newContents);
         article1.setCreateTime(newTime);

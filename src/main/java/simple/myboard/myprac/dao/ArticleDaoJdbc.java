@@ -11,8 +11,8 @@ import simple.myboard.myprac.vo.ArticleVO;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class ArticleDaoJdbc implements ArticleDao {
 
@@ -28,15 +28,9 @@ public class ArticleDaoJdbc implements ArticleDao {
             article.setTitle(rs.getString("title"));
             article.setContents(rs.getString("contents"));
             article.setIsDel(rs.getInt("is_del"));
-            String datePattern = "yyyy-MM-dd hh:mm:ss";
-            SimpleDateFormat formatter = new SimpleDateFormat(datePattern);
-            try {
-                article.setCreateTime(formatter.parse(rs.getString("create_time")));
-                article.setUpdateTime(formatter.parse(rs.getString("update_time")));
-            } catch (ParseException e) {
-                logger.debug("TB_ARTICLE Date ParseException");
-                throw new SQLException();
-            }
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            article.setCreateTime(LocalDateTime.parse(rs.getString("create_time"), formatter));
+            article.setUpdateTime(LocalDateTime.parse(rs.getString("update_time"), formatter));
             return article;
         }
     };

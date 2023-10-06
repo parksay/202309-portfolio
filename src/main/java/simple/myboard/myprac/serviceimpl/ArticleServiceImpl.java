@@ -4,7 +4,7 @@ import simple.myboard.myprac.dao.ArticleDao;
 import simple.myboard.myprac.service.ArticleService;
 import simple.myboard.myprac.vo.ArticleVO;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class ArticleServiceImpl implements ArticleService {
 
@@ -15,15 +15,15 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     public void addArticle(ArticleVO article) {
-        Date now = new Date();
-        if(article.getIsDel() == 0) article.setIsDel(0);
-        if(article.getCreateTime() == null) article.setCreateTime(now);
-        if(article.getUpdateTime() == null) article.setUpdateTime(now);
+        article.setIsDel(0);
+        LocalDateTime now = LocalDateTime.now();
+        article.setCreateTime(now);
+        article.setUpdateTime(now);
         this.articleDao.insertArticle(article);
     }
 
     public void updateArticle(ArticleVO article) {
-        article.setUpdateTime(new Date());
+        article.setUpdateTime(LocalDateTime.now());
         this.articleDao.updateArticle(article);
     }
 

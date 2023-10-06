@@ -16,9 +16,8 @@ import simple.myboard.myprac.serviceimpl.ArticleServiceImpl;
 import simple.myboard.myprac.vo.ArticleVO;
 
 import javax.sql.DataSource;
-import java.text.SimpleDateFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 //@ExtendWith(SpringExtension.class)
@@ -40,11 +39,11 @@ public class ArticleServiceImplTest {
         this.service = new ArticleServiceImpl();
         this.service.setArticleDao(this.dao);
         this.articleList = Arrays.asList(
-                new ArticleVO(1, "testTitle01", "testContents01"),
-                new ArticleVO(1, "testTitle02", "testContents02"),
-                new ArticleVO(2, "testTitle03", "testContents03"),
-                new ArticleVO(2, "testTitle04", "testContents04"),
-                new ArticleVO(3, "testTitle05", "testContents05")
+                new ArticleVO(130, "testTitle01", "testContents01"),
+                new ArticleVO(130, "testTitle02", "testContents02"),
+                new ArticleVO(130, "testTitle03", "testContents03"),
+                new ArticleVO(130, "testTitle04", "testContents04"),
+                new ArticleVO(130, "testTitle05", "testContents05")
         );
 
     }
@@ -111,15 +110,12 @@ public class ArticleServiceImplTest {
 
     }
     private void checkSameArticle(ArticleVO article1, ArticleVO article2) {
-        //
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-        //
         Assertions.assertEquals(article1.getMemberSeq(), article2.getMemberSeq());
         Assertions.assertEquals(article1.getTitle(), article2.getTitle());
         Assertions.assertEquals(article1.getContents(), article2.getContents());
-        Assertions.assertEquals(article2.getIsDel(), 0);
-        Assertions.assertEquals(formatter.format(article2.getCreateTime()), formatter.format(new Date()));
-        Assertions.assertEquals(formatter.format(article2.getUpdateTime()), formatter.format(new Date()));
+        Assertions.assertEquals(article1.getIsDel(), article2.getIsDel());
+        Assertions.assertEquals(article1.getCreateTime().truncatedTo(ChronoUnit.MINUTES), article2.getCreateTime().truncatedTo(ChronoUnit.MINUTES));
+        Assertions.assertEquals(article1.getUpdateTime().truncatedTo(ChronoUnit.MINUTES), article2.getUpdateTime().truncatedTo(ChronoUnit.MINUTES));
     }
 
 

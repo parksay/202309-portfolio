@@ -9,8 +9,8 @@ import simple.myboard.myprac.vo.MemberVO;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class MemberDaoJdbc implements MemberDao {
 
@@ -31,15 +31,9 @@ public class MemberDaoJdbc implements MemberDao {
             member.setUserPsw(rs.getString("user_psw"));
             member.setUserName(rs.getString("user_name"));
             member.setIsDel(rs.getInt("is_del"));
-            String datePattern = "yyyy-MM-dd hh:mm:ss";
-            SimpleDateFormat formatter = new SimpleDateFormat(datePattern);
-            try {
-                member.setCreateTime(formatter.parse(rs.getString("create_time")));
-                member.setUpdateTime(formatter.parse(rs.getString("update_time")));
-            } catch (ParseException e) {
-                logger.debug("TB_MEMBER Date ParseException");
-                throw new SQLException();
-            }
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            member.setCreateTime(LocalDateTime.parse(rs.getString("create_time"), formatter));
+            member.setUpdateTime(LocalDateTime.parse(rs.getString("update_time"), formatter));
             return member;
         }
     };
