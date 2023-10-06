@@ -39,11 +39,11 @@ public class ArticleServiceImplTest {
         this.service = new ArticleServiceImpl();
         this.service.setArticleDao(this.dao);
         this.articleList = Arrays.asList(
-                new ArticleVO(130, "testTitle01", "testContents01"),
-                new ArticleVO(130, "testTitle02", "testContents02"),
-                new ArticleVO(130, "testTitle03", "testContents03"),
-                new ArticleVO(130, "testTitle04", "testContents04"),
-                new ArticleVO(130, "testTitle05", "testContents05")
+                new ArticleVO(201, "testTitle01", "testContents01"),
+                new ArticleVO(201, "testTitle02", "testContents02"),
+                new ArticleVO(201, "testTitle03", "testContents03"),
+                new ArticleVO(201, "testTitle04", "testContents04"),
+                new ArticleVO(201, "testTitle05", "testContents05")
         );
 
     }
@@ -143,4 +143,5 @@ public class ArticleServiceImplTest {
         }
     }
 
+    // TODO: getEmptyFailTest
 }
