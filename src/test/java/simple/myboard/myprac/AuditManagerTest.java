@@ -37,9 +37,7 @@ public class AuditManagerTest {
 
     @Test
     public void addTest() {
-        MemberVO member = new MemberVO("test", "test", "test");
-        this.memberService.addMember(member);
-        this.articleService.addArticle(new ArticleVO(this.memberDao.getLastIndexMember(), "test", "test"));
+        System.out.println("this.testMember = " + this.testMember);
     }
 
     @Test

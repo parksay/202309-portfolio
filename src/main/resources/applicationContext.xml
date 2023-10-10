@@ -47,7 +47,7 @@
 
     <aop:config>
         <aop:advisor advice-ref="transactionAdvice" pointcut="execution(* *..*ServiceImpl.*(..))"/>
-        <aop:advisor advice-ref="auditManager" pointcut="execution(* *..*ServiceImpl.add(..)) || execution(* *..*ServiceImpl.update(..))"/>
+        <aop:advisor advice-ref="auditManager" pointcut="execution(* *..*ServiceImpl.add*(..)) || execution(* *..*ServiceImpl.update*(..))"/>
     </aop:config>
 
 

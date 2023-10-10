@@ -4,8 +4,6 @@ import simple.myboard.myprac.dao.ArticleDao;
 import simple.myboard.myprac.service.ArticleService;
 import simple.myboard.myprac.vo.ArticleVO;
 
-import java.time.LocalDateTime;
-
 public class ArticleServiceImpl implements ArticleService {
 
     private ArticleDao articleDao;
@@ -15,15 +13,11 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     public void addArticle(ArticleVO article) {
-        article.setIsDel(0);
-        LocalDateTime now = LocalDateTime.now();
-        article.setCreateTime(now);
-        article.setUpdateTime(now);
+        // null check 여기서 하기
         this.articleDao.insertArticle(article);
     }
 
     public void updateArticle(ArticleVO article) {
-        article.setUpdateTime(LocalDateTime.now());
         this.articleDao.updateArticle(article);
     }
 

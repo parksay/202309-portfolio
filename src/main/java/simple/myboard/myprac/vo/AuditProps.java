@@ -12,16 +12,24 @@ public class AuditProps {
         return isDel;
     }
 
+    public void setIsDel(int isDel) {
+        this.isDel = isDel;
+    }
+
     public LocalDateTime getCreateTime() {
         return createTime;
+    }
+
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
     }
 
     public LocalDateTime getUpdateTime() {
         return updateTime;
     }
 
-    public void setIsDel(int isDel) {
-        this.isDel = isDel;
+    public void setUpdateTime(LocalDateTime updateTime) {
+        this.updateTime = updateTime;
     }
 
     public void renewCreateTime() {
