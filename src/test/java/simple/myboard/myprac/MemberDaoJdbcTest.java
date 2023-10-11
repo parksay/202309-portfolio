@@ -48,11 +48,11 @@ public class MemberDaoJdbcTest {
         MemberVO member1 = this.memberList.get(1);
         MemberVO member2 = this.memberList.get(2);
         this.memberDao.insertMember(member0);
-        Assertions.assertEquals(1, this.memberDao.getCountMember());
+        Assertions.assertEquals(1, this.memberDao.getCountAllMember());
         this.memberDao.insertMember(member1);
-        Assertions.assertEquals(2, this.memberDao.getCountMember());
+        Assertions.assertEquals(2, this.memberDao.getCountAllMember());
         this.memberDao.insertMember(member2);
-        Assertions.assertEquals(3, this.memberDao.getCountMember());
+        Assertions.assertEquals(3, this.memberDao.getCountAllMember());
         //
         int lastIndex = this.memberDao.getLastIndexMember();
         checkSameMember(member0, this.memberDao.getMemberBySeq(lastIndex-2));
@@ -74,10 +74,10 @@ public class MemberDaoJdbcTest {
     public void deleteAllMemberTest() {
         //
         this.memberDao.insertMember(this.memberList.get(0));
-        Assertions.assertNotEquals(0, this.memberDao.getCountMember());
+        Assertions.assertNotEquals(0, this.memberDao.getCountAllMember());
         //
         this.memberDao.deleteAllMember();
-        Assertions.assertEquals(0, this.memberDao.getCountMember());
+        Assertions.assertEquals(0, this.memberDao.getCountAllMember());
     }
 
     @Test
@@ -111,13 +111,13 @@ public class MemberDaoJdbcTest {
         this.memberDao.insertMember(this.memberList.get(1));
         this.memberDao.insertMember(this.memberList.get(2));
         //
-        Assertions.assertEquals(3, this.memberDao.getCountMember());
+        Assertions.assertEquals(3, this.memberDao.getCountAllMember());
         this.memberDao.deleteMemberBySeq(this.memberDao.getLastIndexMember());
-        Assertions.assertEquals(2, this.memberDao.getCountMember());
+        Assertions.assertEquals(2, this.memberDao.getCountAllMember());
         this.memberDao.deleteMemberBySeq(this.memberDao.getLastIndexMember());
-        Assertions.assertEquals(1, this.memberDao.getCountMember());
+        Assertions.assertEquals(1, this.memberDao.getCountAllMember());
         this.memberDao.deleteMemberBySeq(this.memberDao.getLastIndexMember());
-        Assertions.assertEquals(0, this.memberDao.getCountMember());
+        Assertions.assertEquals(0, this.memberDao.getCountAllMember());
 
     }
 

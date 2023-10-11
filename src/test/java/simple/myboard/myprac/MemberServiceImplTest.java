@@ -60,11 +60,11 @@ public class MemberServiceImplTest {
         MemberVO member1 = this.memberList.get(1);
         MemberVO member2 = this.memberList.get(2);
         this.memberService.addMember(member0);
-        Assertions.assertEquals(1, this.memberDao.getCountMember());
+        Assertions.assertEquals(1, this.memberDao.getCountAllMember());
         this.memberService.addMember(member1);
-        Assertions.assertEquals(2, this.memberDao.getCountMember());
+        Assertions.assertEquals(2, this.memberDao.getCountAllMember());
         this.memberService.addMember(member2);
-        Assertions.assertEquals(3, this.memberDao.getCountMember());
+        Assertions.assertEquals(3, this.memberDao.getCountAllMember());
         //
         int lastIndex = this.memberService.getLastIndexMember();
         MemberVO member4 = this.memberService.getMemberBySeq(lastIndex);
@@ -120,19 +120,19 @@ public class MemberServiceImplTest {
         this.memberService.addMember(this.memberList.get(0));
         this.memberService.addMember(this.memberList.get(1));
         this.memberService.addMember(this.memberList.get(2));
-        Assertions.assertEquals(3, this.memberDao.getCountMember());
+        Assertions.assertEquals(3, this.memberDao.getCountAllMember());
         //
         int lastIndex0 = this.memberService.getLastIndexMember();
         this.memberService.deleteMemberBySeq(lastIndex0);
-        Assertions.assertEquals(2, this.memberDao.getCountMember());
+        Assertions.assertEquals(2, this.memberDao.getCountAllMember());
         int lastIndex1 = this.memberService.getLastIndexMember();
         Assertions.assertEquals(lastIndex1, lastIndex0 - 1);
         this.memberService.deleteMemberBySeq(lastIndex1);
-        Assertions.assertEquals(1, this.memberDao.getCountMember());
+        Assertions.assertEquals(1, this.memberDao.getCountAllMember());
         int lastIndex2 = this.memberService.getLastIndexMember();
         Assertions.assertEquals(lastIndex2, lastIndex1 - 1);
         this.memberService.deleteMemberBySeq(lastIndex2);
-        Assertions.assertEquals(0, this.memberDao.getCountMember());
+        Assertions.assertEquals(0, this.memberDao.getCountAllMember());
     }
 
     @Test

@@ -59,11 +59,11 @@ public class ArticleDaoJdbcTest {
     public void insertArticleTest() {
         //
         this.articleDao.insertArticle(this.articleList.get(0));
-        Assertions.assertEquals(1, this.articleDao.getCountArticle());
+        Assertions.assertEquals(1, this.articleDao.getCountAllArticle());
         this.articleDao.insertArticle(this.articleList.get(1));
-        Assertions.assertEquals(2, this.articleDao.getCountArticle());
+        Assertions.assertEquals(2, this.articleDao.getCountAllArticle());
         this.articleDao.insertArticle(this.articleList.get(2));
-        Assertions.assertEquals(3, this.articleDao.getCountArticle());
+        Assertions.assertEquals(3, this.articleDao.getCountAllArticle());
         //
         int lastIndex = this.articleDao.getLastIndexArticle();
         Assertions.assertEquals(this.articleList.get(0).getContents(), this.articleDao.getArticleBySeq(lastIndex-2).getContents());
@@ -145,7 +145,7 @@ public class ArticleDaoJdbcTest {
     @Test
     public void deleteAllArticleTest() {
         this.articleDao.deleteAllArticle();
-        Assertions.assertEquals(0, this.articleDao.getCountArticle());
+        Assertions.assertEquals(0, this.articleDao.getCountAllArticle());
     }
 
     private void checkSameArticle(ArticleVO article1, ArticleVO article2) {

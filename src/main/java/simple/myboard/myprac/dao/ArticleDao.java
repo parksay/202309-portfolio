@@ -8,7 +8,7 @@ public interface ArticleDao {
     public abstract void updateArticle(ArticleVO article);
     public abstract ArticleVO getArticleBySeq(int articleSeq);
     public abstract void deleteArticleBySeq(int articleSeq);
-    public abstract int getCountArticle();
+    public abstract int getCountAllArticle();
     public abstract void deleteAllArticle();
     public abstract int getLastIndexArticle();
 }

@@ -77,7 +77,7 @@ public class MemberDaoJdbc implements MemberDao {
     }
 
     @Override
-    public int getCountMember() {
+    public int getCountAllMember() {
         return this.jdbcTemplate.query("SELECT COUNT(*) FROM TB_MEMBER", (rs)->{ rs.next(); return rs.getInt(1); });
     }
 

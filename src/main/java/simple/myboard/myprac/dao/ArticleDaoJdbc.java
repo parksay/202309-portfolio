@@ -80,7 +80,7 @@ public class ArticleDaoJdbc implements ArticleDao {
     }
 
     @Override
-    public int getCountArticle() {
+    public int getCountAllArticle() {
         return this.jdbcTemplate.query(
                 new PreparedStatementCreator() {
                     @Override

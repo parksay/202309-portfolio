@@ -8,7 +8,7 @@ public interface MemberDao {
     public abstract MemberVO getMemberBySeq(int memberSeq);
     public abstract void updateMember(MemberVO member);
     public abstract void deleteMemberBySeq(int memberSeq);
-    public abstract int getCountMember();
+    public abstract int getCountAllMember();
     public abstract void deleteAllMember();
     public abstract int getLastIndexMember();
 }
