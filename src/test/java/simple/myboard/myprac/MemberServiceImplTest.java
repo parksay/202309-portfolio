@@ -1,5 +1,6 @@
 package simple.myboard.myprac;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -7,6 +8,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.TransientDataAccessResourceException;
+import simple.myboard.myprac.dao.MemberDao;
 import simple.myboard.myprac.dao.MemberDaoJdbc;
 import simple.myboard.myprac.service.ArticleService;
 import simple.myboard.myprac.service.MemberService;
@@ -22,22 +24,20 @@ import java.util.List;
 public class MemberServiceImplTest {
 
     private MemberServiceImpl memberService;
-    private MemberDaoJdbc memberDao;
+    private MemberDao memberDao;
     private List<MemberVO> memberList;
 
     private ArticleService articleService;
-    // TODO : transaction 다 걸어놓고 deleteAll 지우기
-    // TODO: dao 단 interface 에다가 setDataSource 만들기
 
     @BeforeEach
     public void setUp() {
         //
         ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
-        this.memberDao = context.getBean("memberDao", MemberDaoJdbc.class);
-        this.memberService = new MemberServiceImpl();
-        this.memberService.setMemberDao(this.memberDao);
+        this.memberDao = context.getBean("memberDao", MemberDao.class);
         this.articleService = context.getBean("articleService", ArticleService.class);
+        this.memberService = context.getBean("memberService", MemberServiceImpl.class);
         //
+        TestUtil.deleteAllArticleAndMember();
         memberList = Arrays.asList(
                 new MemberVO("testid01", "testpsw01", "testname01"),
                 new MemberVO("testid02", "testpsw02", "testname02"),
@@ -45,14 +45,16 @@ public class MemberServiceImplTest {
                 new MemberVO("testid04", "testpsw04", "testname04"),
                 new MemberVO("testid05", "testpsw05", "testname05")
         );
+
     }
 
+    @AfterEach
+    public void endEach() {
+        TestUtil.deleteAllArticleAndMember();
+    }
 
     @Test
     public void addAndGetMemberTest() {
-        //
-        this.memberDao.deleteAllMember();
-        Assertions.assertEquals(0, this.memberDao.getCountMember());
         //
         MemberVO member0 = this.memberList.get(0);
         MemberVO member1 = this.memberList.get(1);
@@ -64,7 +66,7 @@ public class MemberServiceImplTest {
         this.memberService.addMember(member2);
         Assertions.assertEquals(3, this.memberDao.getCountMember());
         //
-        int lastIndex = this.memberDao.getLastIndexMember();
+        int lastIndex = this.memberService.getLastIndexMember();
         MemberVO member4 = this.memberService.getMemberBySeq(lastIndex);
         Assertions.assertEquals(0, member4.getIsDel());
         Assertions.assertNotNull(member4.getCreateTime());
@@ -74,7 +76,7 @@ public class MemberServiceImplTest {
 
     @Test
     public void getMemberEmptyTest() {
-        int lastIndex = this.memberDao.getLastIndexMember();
+        int lastIndex = this.memberService.getLastIndexMember();
         MemberVO emptyMember = this.memberService.getMemberBySeq(lastIndex + 1);
         Assertions.assertNull(emptyMember);
     }
@@ -85,7 +87,7 @@ public class MemberServiceImplTest {
         //
         MemberVO member0 = this.memberList.get(0);
         this.memberService.addMember(member0);
-        int lastIndex1 = this.memberDao.getLastIndexMember();
+        int lastIndex1 = this.memberService.getLastIndexMember();
         MemberVO member1 = this.memberService.getMemberBySeq(lastIndex1);
         this.checkSameMember(member0, member1);
 
@@ -96,7 +98,7 @@ public class MemberServiceImplTest {
         member1.setIsDel(1);
         this.memberService.updateMember(member1);
         //
-        int lastIndex2 = this.memberDao.getLastIndexMember();
+        int lastIndex2 = this.memberService.getLastIndexMember();
         Assertions.assertEquals(lastIndex2, lastIndex1);
         MemberVO member2 = this.memberService.getMemberBySeq(lastIndex2);
         this.checkSameMember(member1, member2);
@@ -115,23 +117,19 @@ public class MemberServiceImplTest {
     @Test
     public void deleteMemberTest() {
         //
-        this.memberDao.deleteAllMember();
-        Assertions.assertEquals(0, this.memberDao.getCountMember());
-
-        //
         this.memberService.addMember(this.memberList.get(0));
         this.memberService.addMember(this.memberList.get(1));
         this.memberService.addMember(this.memberList.get(2));
         Assertions.assertEquals(3, this.memberDao.getCountMember());
         //
-        int lastIndex0 = this.memberDao.getLastIndexMember();
+        int lastIndex0 = this.memberService.getLastIndexMember();
         this.memberService.deleteMemberBySeq(lastIndex0);
         Assertions.assertEquals(2, this.memberDao.getCountMember());
-        int lastIndex1 = this.memberDao.getLastIndexMember();
+        int lastIndex1 = this.memberService.getLastIndexMember();
         Assertions.assertEquals(lastIndex1, lastIndex0 - 1);
         this.memberService.deleteMemberBySeq(lastIndex1);
         Assertions.assertEquals(1, this.memberDao.getCountMember());
-        int lastIndex2 = this.memberDao.getLastIndexMember();
+        int lastIndex2 = this.memberService.getLastIndexMember();
         Assertions.assertEquals(lastIndex2, lastIndex1 - 1);
         this.memberService.deleteMemberBySeq(lastIndex2);
         Assertions.assertEquals(0, this.memberDao.getCountMember());
@@ -161,11 +159,11 @@ public class MemberServiceImplTest {
     @Test
     public void deleteIntegrityFailTest() {
         this.memberService.addMember(this.memberList.get(0));
-        int lastIndex = this.memberDao.getLastIndexMember();
+        int lastIndex = this.memberService.getLastIndexMember();
         this.articleService.addArticle(new ArticleVO(lastIndex, "test", "test"));
         Assertions.assertThrows(DataIntegrityViolationException.class, ()->{
             this.memberService.deleteMemberBySeq(lastIndex);
         });
-
+        ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
     }
 }

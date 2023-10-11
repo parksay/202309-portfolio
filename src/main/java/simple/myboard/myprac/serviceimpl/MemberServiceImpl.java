@@ -37,4 +37,8 @@ public class MemberServiceImpl implements MemberService {
         this.memberDao.deleteMemberBySeq(memberSeq);
     }
 
+    public int getLastIndexMember() {
+        return this.memberDao.getLastIndexMember();
+    }
+
 }

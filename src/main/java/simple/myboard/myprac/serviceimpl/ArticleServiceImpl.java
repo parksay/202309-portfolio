@@ -28,4 +28,8 @@ public class ArticleServiceImpl implements ArticleService {
     public void deleteArticleBySeq(int articleSeq) {
         this.articleDao.deleteArticleBySeq(articleSeq);
     }
+
+    public int getLastIndexArticle() {
+        return this.articleDao.getLastIndexArticle();
+    }
 }

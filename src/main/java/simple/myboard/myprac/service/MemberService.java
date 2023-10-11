@@ -10,5 +10,6 @@ public interface MemberService {
     public abstract void addMember(MemberVO member);
     public abstract void updateMember(MemberVO member);
     public abstract void deleteMemberBySeq(int memberSeq);
+    public abstract int getLastIndexMember();
     
 }

@@ -15,5 +15,6 @@ public interface ArticleService {
     public abstract ArticleVO getArticleBySeq(int seq);
 
     public abstract void deleteArticleBySeq(int articleSeq);
+    public abstract int getLastIndexArticle();
 
 }

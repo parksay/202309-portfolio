@@ -1,5 +1,6 @@
 package simple.myboard.myprac;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,8 +21,12 @@ public class MemberDaoJdbcTest {
 
     @BeforeEach
     public void setUp() {
+        //
         ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
-        this.memberDao = context.getBean("memberDao", MemberDaoJdbc.class);
+        this.memberDao = context.getBean("memberDao", MemberDaoJdbc.class); // 테스트하려는 특정 클래스
+        //
+        TestUtil.deleteAllArticleAndMember();
+        //
         LocalDateTime newTime = LocalDateTime.of(2023, 10, 6, 14, 26, 47);
         memberList = Arrays.asList(
                 new MemberVO("testid01", "testpsw01", "testname01", 0, newTime, newTime),
@@ -30,14 +35,14 @@ public class MemberDaoJdbcTest {
                 new MemberVO("testid04", "testpsw04", "testname04", 0, newTime, newTime),
                 new MemberVO("testid05", "testpsw05", "testname05", 0, newTime, newTime)
         );
-        this.memberDao.deleteAllMember();
     }
 
+    @AfterEach
+    public void endEach() {
+        TestUtil.deleteAllArticleAndMember();
+    }
     @Test
     public void addAndGetMemberTest() {
-        //
-        this.memberDao.deleteAllMember();
-        Assertions.assertEquals(0, this.memberDao.getCountMember());
         //
         MemberVO member0 = this.memberList.get(0);
         MemberVO member1 = this.memberList.get(1);
@@ -101,9 +106,6 @@ public class MemberDaoJdbcTest {
 
     @Test
     public void deleteMemberBySeqTest() {
-        //
-        this.memberDao.deleteAllMember();
-        Assertions.assertEquals(0, this.memberDao.getCountMember());
         //
         this.memberDao.insertMember(this.memberList.get(0));
         this.memberDao.insertMember(this.memberList.get(1));

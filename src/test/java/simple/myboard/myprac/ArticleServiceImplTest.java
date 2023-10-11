@@ -1,6 +1,7 @@
 package simple.myboard.myprac;
 
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,25 +28,30 @@ public class ArticleServiceImplTest {
     private static final Logger logger = LoggerFactory.getLogger(ArticleDaoJdbcTest.class);
 
     List<ArticleVO> articleList;
-    private ArticleDao dao;
-    private ArticleServiceImpl service;
-
+    private ArticleDao articleDao;
+    private ArticleServiceImpl articleService;
 
 
     @BeforeEach
     public void setUp() {
         ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
-        this.dao = context.getBean("articleDao", ArticleDao.class);
-        this.service = new ArticleServiceImpl();
-        this.service.setArticleDao(this.dao);
+        this.articleDao = context.getBean("articleDao", ArticleDao.class);
+        this.articleService = context.getBean("articleService", ArticleServiceImpl.class);  // 내가 테스트하려는 특정 클래스
+        TestUtil.deleteAllArticleAndMember();
+        int lastIndexMember = TestUtil.getLastIndexMember();
         this.articleList = Arrays.asList(
-                new ArticleVO(201, "testTitle01", "testContents01"),
-                new ArticleVO(201, "testTitle02", "testContents02"),
-                new ArticleVO(201, "testTitle03", "testContents03"),
-                new ArticleVO(201, "testTitle04", "testContents04"),
-                new ArticleVO(201, "testTitle05", "testContents05")
+                new ArticleVO(lastIndexMember, "testTitle01", "testContents01"),
+                new ArticleVO(lastIndexMember, "testTitle02", "testContents02"),
+                new ArticleVO(lastIndexMember, "testTitle03", "testContents03"),
+                new ArticleVO(lastIndexMember, "testTitle04", "testContents04"),
+                new ArticleVO(lastIndexMember, "testTitle05", "testContents05")
         );
 
+    }
+
+    @AfterEach
+    public void endEach() {
+        TestUtil.deleteAllArticleAndMember();
     }
 
     @Test
@@ -53,12 +59,12 @@ public class ArticleServiceImplTest {
         //
         ArticleVO article1 = this.articleList.get(0);
         ArticleVO article2 = this.articleList.get(1);
-        this.service.addArticle(article1);
-        this.service.addArticle(article2);
+        this.articleService.addArticle(article1);
+        this.articleService.addArticle(article2);
         //
-        int lastIndex = this.dao.getLastIndexArticle();
-        ArticleVO article3 = this.service.getArticleBySeq(lastIndex-1);
-        ArticleVO article4 = this.service.getArticleBySeq(lastIndex);
+        int lastIndex = this.articleService.getLastIndexArticle();
+        ArticleVO article3 = this.articleService.getArticleBySeq(lastIndex-1);
+        ArticleVO article4 = this.articleService.getArticleBySeq(lastIndex);
         //
         this.checkSameArticle(article1, article3);
         this.checkSameArticle(article2, article4);
@@ -68,23 +74,21 @@ public class ArticleServiceImplTest {
     @Test
     public void deleteArticleTest() {
         //
-        this.dao.deleteAllArticle();
+        this.articleService.addArticle(this.articleList.get(0));
+        this.articleService.addArticle(this.articleList.get(1));
+        this.articleService.addArticle(this.articleList.get(2));
+        this.articleService.addArticle(this.articleList.get(3));
+        int lastIndex = this.articleService.getLastIndexArticle();
         //
-        this.service.addArticle(this.articleList.get(0));
-        this.service.addArticle(this.articleList.get(1));
-        this.service.addArticle(this.articleList.get(2));
-        this.service.addArticle(this.articleList.get(3));
-        int lastIndex = this.dao.getLastIndexArticle();
-        //
-        Assertions.assertEquals(4, this.dao.getCountArticle());
-        this.service.deleteArticleBySeq(lastIndex);
-        Assertions.assertEquals(3, this.dao.getCountArticle());
-        this.service.deleteArticleBySeq(lastIndex-1);
-        Assertions.assertEquals(2, this.dao.getCountArticle());
-        this.service.deleteArticleBySeq(lastIndex-2);
-        Assertions.assertEquals(1, this.dao.getCountArticle());
-        this.service.deleteArticleBySeq(lastIndex-3);
-        Assertions.assertEquals(0, this.dao.getCountArticle());
+        Assertions.assertEquals(4, this.articleDao.getCountArticle());
+        this.articleService.deleteArticleBySeq(lastIndex);
+        Assertions.assertEquals(3, this.articleDao.getCountArticle());
+        this.articleService.deleteArticleBySeq(lastIndex-1);
+        Assertions.assertEquals(2, this.articleDao.getCountArticle());
+        this.articleService.deleteArticleBySeq(lastIndex-2);
+        Assertions.assertEquals(1, this.articleDao.getCountArticle());
+        this.articleService.deleteArticleBySeq(lastIndex-3);
+        Assertions.assertEquals(0, this.articleDao.getCountArticle());
 
 
     }
@@ -93,18 +97,17 @@ public class ArticleServiceImplTest {
     @Test
     public void updateArticleTest() {
         //
-        this.dao.deleteAllArticle();
         ArticleVO article0 = this.articleList.get(0);
-        this.service.addArticle(article0);
-        int lastIndex = this.dao.getLastIndexArticle();
-        ArticleVO article1 = this.service.getArticleBySeq(lastIndex);
+        this.articleService.addArticle(article0);
+        int lastIndex = this.articleService.getLastIndexArticle();
+        ArticleVO article1 = this.articleService.getArticleBySeq(lastIndex);
         this.checkSameArticle(article0, article1);
         //
         ArticleVO article2 = this.articleList.get(4);
         article2.setArticleSeq(lastIndex);
         article2.setCreateTime(article1.getCreateTime());
-        this.service.updateArticle(article2);
-        ArticleVO article3 = this.service.getArticleBySeq(lastIndex);
+        this.articleService.updateArticle(article2);
+        ArticleVO article3 = this.articleService.getArticleBySeq(lastIndex);
         //
         this.checkSameArticle(article2, article3);
 
