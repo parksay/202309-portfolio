@@ -35,7 +35,7 @@ public class ArticleDaoJdbcTest {
         DataSource dataSource = context.getBean("dataSource", DataSource.class);
         this.articleDao = new ArticleDaoJdbc();
         this.articleDao.setDataSource(dataSource);
-        TestUtil.deleteAllArticleAndMember();
+        TestUtil.clearTestData();
         int lastIndexMember = TestUtil.getLastIndexMember();
         //
         String pattern = "yyyy-MM-dd HH:mm:ss"; // LocalDateTime 을 formatter 로 변환해 보기
@@ -52,7 +52,7 @@ public class ArticleDaoJdbcTest {
 
     @AfterEach
     public void endEach() {
-        TestUtil.deleteAllArticleAndMember();
+        TestUtil.clearTestData();
     }
 
     @Test

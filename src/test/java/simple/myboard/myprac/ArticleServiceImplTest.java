@@ -37,7 +37,7 @@ public class ArticleServiceImplTest {
         ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
         this.articleDao = context.getBean("articleDao", ArticleDao.class);
         this.articleService = context.getBean("articleService", ArticleServiceImpl.class);  // 내가 테스트하려는 특정 클래스
-        TestUtil.deleteAllArticleAndMember();
+        TestUtil.clearTestData();
         int lastIndexMember = TestUtil.getLastIndexMember();
         this.articleList = Arrays.asList(
                 new ArticleVO(lastIndexMember, "testTitle01", "testContents01"),
@@ -51,7 +51,7 @@ public class ArticleServiceImplTest {
 
     @AfterEach
     public void endEach() {
-        TestUtil.deleteAllArticleAndMember();
+        TestUtil.clearTestData();
     }
 
     @Test

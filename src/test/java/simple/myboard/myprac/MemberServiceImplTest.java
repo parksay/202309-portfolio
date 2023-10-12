@@ -37,7 +37,7 @@ public class MemberServiceImplTest {
         this.articleService = context.getBean("articleService", ArticleService.class);
         this.memberService = context.getBean("memberService", MemberServiceImpl.class);
         //
-        TestUtil.deleteAllArticleAndMember();
+        TestUtil.clearTestData();
         memberList = Arrays.asList(
                 new MemberVO("testid01", "testpsw01", "testname01"),
                 new MemberVO("testid02", "testpsw02", "testname02"),
@@ -50,7 +50,7 @@ public class MemberServiceImplTest {
 
     @AfterEach
     public void endEach() {
-        TestUtil.deleteAllArticleAndMember();
+        TestUtil.clearTestData();
     }
 
     @Test

@@ -25,7 +25,7 @@ public class MemberDaoJdbcTest {
         ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
         this.memberDao = context.getBean("memberDao", MemberDaoJdbc.class); // 테스트하려는 특정 클래스
         //
-        TestUtil.deleteAllArticleAndMember();
+        TestUtil.clearTestData();
         //
         LocalDateTime newTime = LocalDateTime.of(2023, 10, 6, 14, 26, 47);
         memberList = Arrays.asList(
@@ -39,7 +39,7 @@ public class MemberDaoJdbcTest {
 
     @AfterEach
     public void endEach() {
-        TestUtil.deleteAllArticleAndMember();
+        TestUtil.clearTestData();
     }
     @Test
     public void addAndGetMemberTest() {
