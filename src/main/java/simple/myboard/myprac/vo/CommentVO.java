@@ -20,8 +20,7 @@ public class CommentVO extends AuditProps {
     }
 
 
-    public CommentVO(int commentSeq, int articleSeq, int memberSeq, String contents, int isDel, LocalDateTime createTime, LocalDateTime updateTime) {
-        this.commentSeq = commentSeq;
+    public CommentVO(int articleSeq, int memberSeq, String contents, int isDel, LocalDateTime createTime, LocalDateTime updateTime) {
         this.articleSeq = articleSeq;
         this.memberSeq = memberSeq;
         this.contents = contents;

@@ -8,7 +8,6 @@ public interface CommentDao {
 
     public abstract void insertComment(CommentVO comment);
     public abstract CommentVO getCommentBySeq(int commentSeq);
-
     public abstract void updateComment(CommentVO comment);
     public abstract void deleteCommentBySeq(int commentSeq);
     public abstract int getLastIndexComment();
