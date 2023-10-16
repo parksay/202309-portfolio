@@ -10,7 +10,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 
 public class UtilTest {
 
@@ -70,7 +73,7 @@ public class UtilTest {
     }
 
     @Test
-    public void LocalDateTimeForamtterTest() {
+    public void localDateTimeForamtterTest() {
         // 변환 전 시간 문자열
         String targetTime = "2023-10-06 14:26:56";
         // 변환
@@ -88,5 +91,33 @@ public class UtilTest {
 
     }
 
+    @Test
+    public void listEqualsTest() {
+        List<Integer> list1 = Arrays.asList(7, 26, 741, 63455, 300183);
+        List<Integer> list2 = Arrays.asList(7, 26, 741);
+        List<Integer> list3 = Arrays.asList(7, 26, 741, 63455, 300183);
+        List<Integer> list4 = Arrays.asList(741, 300183, 26,  63455, 7);
+        // 1과 3은 요소도 같고 순서도 같음 - equals 통과
+        Assertions.assertTrue(list1.equals(list3));
+        // 1은 3의 모든 요소를 포함함 (순서 상관없이)
+        Assertions.assertTrue(list1.containsAll(list3));
+        // 3은 1의 모든 요소를 포함함 (순서 상관없이)
+        Assertions.assertTrue(list3.containsAll(list1));
+        // 1은 2의 모든 요소를 포함함 (순서 상관없이)   / list1 교집합 list2 = list2
+        Assertions.assertTrue(list1.containsAll(list2));
+        // 2는 1의 모든 요소를 포함하지는 않음 - 즉, 2는 1의 부분 집합 (부분 리스트) / list2 교집합 list1 = list1이 아님. list1 은 더 큼
+        Assertions.assertFalse(list2.containsAll(list1));
+        // 1과 4는 서로 모든 요소가 같지만 순서가 다름. - equals 통과 못 함
+        Assertions.assertFalse(list1.equals(list4));
+        // 4과 1는 서로 모든 요소가 같지만 순서가 다름. - equals 통과 못 함
+        Assertions.assertFalse(list4.equals(list1));
+        // 1을 재료로 만든 set 과 2를 재료로 만든 set 은 서로 같음 - 순서 상관 없으면서 모든 요소가 서로 같음.
+        Assertions.assertTrue(new HashSet<>(list1).equals(new HashSet<>(list4)));
+        // 1은 4의 모든 요소를 순서 상관없이 포함하면서 4도 1의 모든 요소를 순서 상관없이 포함하면 두 리스트는 모든 요소가 서로 같음
+        Assertions.assertTrue(list1.containsAll(list4) && list4.containsAll(list1));
+        //
+        // 모든 요소가 서로 같고 순서까지 같음 - equals
+        // 모든 요소가 서로 같지만 순서는 다름 - 순서가 상관없는 자료형인 Set 으로 변환해서 비교하거나 containsAll 로 서로 포함하는 관계인지 확인
+    }
 
 }
