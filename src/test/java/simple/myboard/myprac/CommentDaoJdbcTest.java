@@ -11,7 +11,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import simple.myboard.myprac.dao.ArticleDaoJdbc;
 import simple.myboard.myprac.dao.CommentDao;
-import simple.myboard.myprac.vo.ArticleVO;
 import simple.myboard.myprac.vo.CommentVO;
 
 import java.text.ParseException;
@@ -190,41 +189,110 @@ public class CommentDaoJdbcTest {
 
     @Test
     public void getCommentListByArticleSeqTest() {
+        //
+        // 일단 테스트 데이터 다 넣음
+        this.commentDao.insertComment(this.commentList.get(0));
+        this.commentDao.insertComment(this.commentList.get(1));
+        this.commentDao.insertComment(this.commentList.get(2));
+        this.commentDao.insertComment(this.commentList.get(3));
+        this.commentDao.insertComment(this.commentList.get(4));
+        this.commentDao.insertComment(this.commentList.get(5));
+        this.commentDao.insertComment(this.commentList.get(6));
+        //
+        // this.commentList 를 articleSeq1 로 필터링한 리스트와 DB 에서 articleSeq1 꺼내온 리스트가 같은지
+        int articleSeq1 = this.commentList.get(1).getArticleSeq();
+        List<CommentVO> listGet1 = this.commentDao.getCommentListByArticleSeq(articleSeq1);
+        List<CommentVO> listLocal1 = this.commentList.stream().filter((ele)->ele.getArticleSeq() == articleSeq1).collect(Collectors.toList());
+        Assertions.assertTrue(listGet1.containsAll(listLocal1));
+        Assertions.assertTrue(listLocal1.containsAll(listGet1));
+        //
+        // this.commentList 를 articleSeq2 로 필터링한 리스트와 DB 에서 articleSeq2 꺼내온 리스트가 같은지
+        int articleSeq2 = this.commentList.get(2).getArticleSeq();
+        List<CommentVO> listGet2 = this.commentDao.getCommentListByArticleSeq(articleSeq2);
+        List<CommentVO> listLocal2 = this.commentList.stream().filter((ele)->ele.getArticleSeq() == articleSeq2).collect(Collectors.toList());
+        Assertions.assertTrue(listGet2.containsAll(listLocal2));
+        Assertions.assertTrue(listLocal2.containsAll(listGet2));
 
     }
 
     @Test
-    public void getCommentListByArticleSeqEmptyFailTest() {
-
+    public void getCommentListByArticleSeqEmptyTest() {
+        //
+        int lasIndexArticle = TestUtil.getLastIndexArticle();
+        Assertions.assertNull(this.commentDao.getCommentListByArticleSeq(lasIndexArticle));
     }
 
     @Test
     public void deleteAllCommentTest() {
-
+        this.commentDao.deleteAllComment();
+        Assertions.assertEquals(0, this.commentDao.getCountAllComment());
     }
 
     @Test
     public void deleteAllCommentByMemberSeqTest() {
+        //
+        this.commentDao.insertComment(this.commentList.get(1));
+        this.commentDao.insertComment(this.commentList.get(2));
+        int articleSeq1 = this.commentList.get(1).getArticleSeq();
+        int articleSeq2 = this.commentList.get(2).getArticleSeq();
+        Assertions.assertNotEquals(0, this.commentDao.getCommentListByArticleSeq(articleSeq1).size());
+        Assertions.assertNotEquals(0, this.commentDao.getCommentListByArticleSeq(articleSeq2).size());
+        //
+        this.commentDao.deleteAllCommentByArticleSeq(articleSeq1);
+        //
+        Assertions.assertEquals(0, this.commentDao.getCommentListByArticleSeq(articleSeq1).size());
+        Assertions.assertNotEquals(0, this.commentDao.getCommentListByArticleSeq(articleSeq2).size());
 
     }
 
     @Test
     public void deleteAllCommentByArticleSeqTest() {
-
+        //
+        this.commentDao.insertComment(this.commentList.get(2));
+        this.commentDao.insertComment(this.commentList.get(3));
+        int memberSeq1 = this.commentList.get(1).getMemberSeq();
+        int memberSeq2 = this.commentList.get(2).getMemberSeq();
+        Assertions.assertNotEquals(0, this.commentDao.getCommentListByMemberSeq(memberSeq1).size());
+        Assertions.assertNotEquals(0, this.commentDao.getCommentListByMemberSeq(memberSeq2).size());
+        //
+        this.commentDao.deleteAllCommentByArticleSeq(memberSeq1);
+        //
+        Assertions.assertEquals(0, this.commentDao.getCommentListByMemberSeq(memberSeq1).size());
+        Assertions.assertNotEquals(0, this.commentDao.getCommentListByMemberSeq(memberSeq2).size());
     }
 
-    @Test
-    public void getCountAllCommentTest() {
-
-    }
 
     @Test
     public void getCountAllCommentByMemberSeqTest() {
-
+        //
+        int memberSeq1 = this.commentList.get(1).getMemberSeq();
+        int memberSeq2 = this.commentList.get(2).getMemberSeq();
+        Assertions.assertEquals(0, this.commentDao.getCountAllCommentByMemberSeq(memberSeq1));
+        Assertions.assertEquals(0, this.commentDao.getCountAllCommentByMemberSeq(memberSeq2));
+        //
+        this.commentDao.insertComment(this.commentList.get(3));
+        Assertions.assertEquals(1, this.commentDao.getCountAllCommentByMemberSeq(memberSeq2));
+        this.commentDao.insertComment(this.commentList.get(4));
+        Assertions.assertEquals(2, this.commentDao.getCountAllCommentByMemberSeq(memberSeq2));
+        this.commentDao.insertComment(this.commentList.get(5));
+        Assertions.assertEquals(3, this.commentDao.getCountAllCommentByMemberSeq(memberSeq2));
+        Assertions.assertEquals(0, this.commentDao.getCountAllCommentByMemberSeq(memberSeq1));
     }
 
     @Test
     public void getCountAllCommentByArticleSeqTest() {
-
+        //
+        int articleSeq1 = this.commentList.get(1).getArticleSeq();
+        int articleSeq2 = this.commentList.get(2).getArticleSeq();
+        Assertions.assertEquals(0, this.commentDao.getCountAllCommentByArticleSeq(articleSeq1));
+        Assertions.assertEquals(0, this.commentDao.getCountAllCommentByArticleSeq(articleSeq2));
+        //
+        this.commentDao.insertComment(this.commentList.get(3));
+        Assertions.assertEquals(1, this.commentDao.getCountAllCommentByArticleSeq(articleSeq2));
+        this.commentDao.insertComment(this.commentList.get(4));
+        Assertions.assertEquals(2, this.commentDao.getCountAllCommentByArticleSeq(articleSeq2));
+        Assertions.assertEquals(0, this.commentDao.getCountAllCommentByArticleSeq(articleSeq1));
     }
+
+
 }
