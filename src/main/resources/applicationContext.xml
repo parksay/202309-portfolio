@@ -33,6 +33,10 @@
         <property name="memberDao" ref="memberDao" />
     </bean>
 
+    <bean id="commentDao" class="simple.myboard.myprac.dao.CommentDaoJdbc" >
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
     <bean name="auditManager" class="simple.myboard.myprac.aop.AuditPropsAdvice" />
 
     <bean name="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager" >
