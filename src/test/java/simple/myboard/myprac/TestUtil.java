@@ -25,7 +25,8 @@ public class TestUtil {
 
     public static int getLastIndexMember() {
         MemberService memberService = TestUtil.context.getBean("memberService", MemberService.class);
-        memberService.addMember(new MemberVO("testId", "testPsw", "testName"));
+        int lastIndex = memberService.getLastIndexMember();
+        memberService.addMember(new MemberVO("test"+lastIndex, "testPsw", "testName"));
         return memberService.getLastIndexMember();
     }
 

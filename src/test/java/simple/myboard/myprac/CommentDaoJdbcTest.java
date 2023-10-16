@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
-import simple.myboard.myprac.dao.ArticleDaoJdbc;
 import simple.myboard.myprac.dao.CommentDao;
 import simple.myboard.myprac.vo.CommentVO;
 
@@ -26,7 +25,6 @@ public class CommentDaoJdbcTest {
 
     private static final Logger logger = LoggerFactory.getLogger(CommentDaoJdbcTest.class);
 
-    private ArticleDaoJdbc articleDao;
     private CommentDao commentDao;
     List<CommentVO> commentList;
 
