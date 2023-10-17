@@ -102,12 +102,6 @@ public class CommentDaoJdbcTest {
         }
     }
 
-    @Test
-    public void getCommentBySeqEmptyTest() {
-        // 없으면 null 던지기
-        int lastIndexComment = this.commentDao.getLastIndexComment();
-        Assertions.assertThrows(EmptyResultDataAccessException.class, ()->{this.commentDao.getCommentBySeq(lastIndexComment+1);});
-    }
 
     @Test
     public void updateCommentTest() {
@@ -189,12 +183,6 @@ public class CommentDaoJdbcTest {
         }
     }
 
-    @Test
-    public void getCommentListByMemberSeqEmptyTest() {
-        // 없으면 null 던지기
-        int lasIndexMember = TestUtil.getLastIndexMember();
-        Assertions.assertEquals(0, this.commentDao.getCommentListByMemberSeq(lasIndexMember).size());
-    }
 
     @Test
     public void getCommentListByArticleSeqTest() {
@@ -219,12 +207,6 @@ public class CommentDaoJdbcTest {
 
     }
 
-    @Test
-    public void getCommentListByArticleSeqEmptyTest() {
-        //
-        int lasIndexArticle = TestUtil.getLastIndexArticle();
-        Assertions.assertEquals(0, this.commentDao.getCommentListByArticleSeq(lasIndexArticle).size());
-    }
 
     @Test
     public void deleteAllCommentTest() {

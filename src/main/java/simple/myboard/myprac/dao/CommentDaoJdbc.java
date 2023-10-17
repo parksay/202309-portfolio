@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import simple.myboard.myprac.vo.CommentVO;
-import simple.myboard.myprac.vo.MemberVO;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
