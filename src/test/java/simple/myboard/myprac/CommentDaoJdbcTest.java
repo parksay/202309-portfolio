@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
+import org.springframework.dao.EmptyResultDataAccessException;
 import simple.myboard.myprac.dao.CommentDao;
 import simple.myboard.myprac.vo.CommentVO;
 
@@ -90,12 +91,22 @@ public class CommentDaoJdbcTest {
         Assertions.assertEquals(comment1.getUpdateTime(), comment2.getUpdateTime());
     }
 
+    private void checkSameCommentList(List<CommentVO> commentList1, List<CommentVO> commentList2) {
+        //
+        int length1 = commentList1.size();
+        int length2 = commentList2.size();
+        Assertions.assertEquals(length1, length2);
+        //
+        for(int i=0; i<length1; i++) {
+            this.checkSameComment(commentList1.get(i), commentList2.get(i));
+        }
+    }
 
     @Test
     public void getCommentBySeqEmptyTest() {
         // 없으면 null 던지기
         int lastIndexComment = this.commentDao.getLastIndexComment();
-        Assertions.assertNull(this.commentDao.getCommentBySeq(lastIndexComment+1));
+        Assertions.assertThrows(EmptyResultDataAccessException.class, ()->{this.commentDao.getCommentBySeq(lastIndexComment+1);});
     }
 
     @Test
@@ -108,8 +119,8 @@ public class CommentDaoJdbcTest {
         this.checkSameComment(comment0, comment1);
         // update - 로컬
         LocalDateTime updateTime = LocalDateTime.of(2023, 10, 13, 21, 17, 53);
-        comment1.setMemberSeq(1);
-        comment1.setArticleSeq(1);
+        comment1.setMemberSeq(this.commentList.get(4).getMemberSeq());
+        comment1.setArticleSeq(this.commentList.get(4).getArticleSeq());
         comment1.setContents("newContents");
         comment1.setIsDel(1);
         comment1.setCreateTime(updateTime);
@@ -138,22 +149,22 @@ public class CommentDaoJdbcTest {
         Assertions.assertNotNull(this.commentDao.getCommentBySeq(lastIndexComment));
         Assertions.assertNotNull(this.commentDao.getCommentBySeq(lastIndexComment-1));
         Assertions.assertNotNull(this.commentDao.getCommentBySeq(lastIndexComment-2));
-        Assertions.assertNull(this.commentDao.getCommentBySeq(lastIndexComment-3));
+        Assertions.assertThrows(EmptyResultDataAccessException.class, ()->{this.commentDao.getCommentBySeq(lastIndexComment-3);});
         // 3번만 삭제되고 나머지는 그대로인지?
         this.commentDao.deleteCommentBySeq(lastIndexComment-2);
         Assertions.assertEquals(2, this.commentDao.getCountAllComment());
         Assertions.assertNotNull(this.commentDao.getCommentBySeq(lastIndexComment));
         Assertions.assertNotNull(this.commentDao.getCommentBySeq(lastIndexComment-1));
-        Assertions.assertNull(this.commentDao.getCommentBySeq(lastIndexComment-2));
+        Assertions.assertThrows(EmptyResultDataAccessException.class, ()->{this.commentDao.getCommentBySeq(lastIndexComment-2);});
         // 2번만 삭제되고 나머지는 그대로인지?
         this.commentDao.deleteCommentBySeq(lastIndexComment-1);
         Assertions.assertEquals(1, this.commentDao.getCountAllComment());
         Assertions.assertNotNull(this.commentDao.getCommentBySeq(lastIndexComment));
-        Assertions.assertNull(this.commentDao.getCommentBySeq(lastIndexComment-1));
+        Assertions.assertThrows(EmptyResultDataAccessException.class, ()->{this.commentDao.getCommentBySeq(lastIndexComment-1);});
         // 1번만 삭제되고 나머지는 그대로인지?
         this.commentDao.deleteCommentBySeq(lastIndexComment);
         Assertions.assertEquals(0, this.commentDao.getCountAllComment());
-        Assertions.assertNull(this.commentDao.getCommentBySeq(lastIndexComment));
+        Assertions.assertThrows(EmptyResultDataAccessException.class, ()->{this.commentDao.getCommentBySeq(lastIndexComment);});
     }
 
     @Test
@@ -182,34 +193,29 @@ public class CommentDaoJdbcTest {
     public void getCommentListByMemberSeqEmptyTest() {
         // 없으면 null 던지기
         int lasIndexMember = TestUtil.getLastIndexMember();
-        Assertions.assertNull(this.commentDao.getCommentListByMemberSeq(lasIndexMember));
+        Assertions.assertEquals(0, this.commentDao.getCommentListByMemberSeq(lasIndexMember).size());
     }
 
     @Test
     public void getCommentListByArticleSeqTest() {
         //
         // 일단 테스트 데이터 다 넣음
-        this.commentDao.insertComment(this.commentList.get(0));
-        this.commentDao.insertComment(this.commentList.get(1));
-        this.commentDao.insertComment(this.commentList.get(2));
-        this.commentDao.insertComment(this.commentList.get(3));
-        this.commentDao.insertComment(this.commentList.get(4));
-        this.commentDao.insertComment(this.commentList.get(5));
-        this.commentDao.insertComment(this.commentList.get(6));
+        Iterator<CommentVO> iter = this.commentList.iterator();
+        while(iter.hasNext()) {
+            this.commentDao.insertComment(iter.next());
+        }
         //
         // this.commentList 를 articleSeq1 로 필터링한 리스트와 DB 에서 articleSeq1 꺼내온 리스트가 같은지
         int articleSeq1 = this.commentList.get(1).getArticleSeq();
         List<CommentVO> listGet1 = this.commentDao.getCommentListByArticleSeq(articleSeq1);
         List<CommentVO> listLocal1 = this.commentList.stream().filter((ele)->ele.getArticleSeq() == articleSeq1).collect(Collectors.toList());
-        Assertions.assertTrue(listGet1.containsAll(listLocal1));
-        Assertions.assertTrue(listLocal1.containsAll(listGet1));
+        this.checkSameCommentList(listGet1, listLocal1);
         //
         // this.commentList 를 articleSeq2 로 필터링한 리스트와 DB 에서 articleSeq2 꺼내온 리스트가 같은지
         int articleSeq2 = this.commentList.get(2).getArticleSeq();
         List<CommentVO> listGet2 = this.commentDao.getCommentListByArticleSeq(articleSeq2);
         List<CommentVO> listLocal2 = this.commentList.stream().filter((ele)->ele.getArticleSeq() == articleSeq2).collect(Collectors.toList());
-        Assertions.assertTrue(listGet2.containsAll(listLocal2));
-        Assertions.assertTrue(listLocal2.containsAll(listGet2));
+        this.checkSameCommentList(listGet2, listLocal2);
 
     }
 
@@ -217,7 +223,7 @@ public class CommentDaoJdbcTest {
     public void getCommentListByArticleSeqEmptyTest() {
         //
         int lasIndexArticle = TestUtil.getLastIndexArticle();
-        Assertions.assertNull(this.commentDao.getCommentListByArticleSeq(lasIndexArticle));
+        Assertions.assertEquals(0, this.commentDao.getCommentListByArticleSeq(lasIndexArticle).size());
     }
 
     @Test
@@ -227,7 +233,7 @@ public class CommentDaoJdbcTest {
     }
 
     @Test
-    public void deleteAllCommentByMemberSeqTest() {
+    public void deleteAllCommentByArticleSeqTest() {
         //
         this.commentDao.insertComment(this.commentList.get(1));
         this.commentDao.insertComment(this.commentList.get(2));
@@ -244,16 +250,16 @@ public class CommentDaoJdbcTest {
     }
 
     @Test
-    public void deleteAllCommentByArticleSeqTest() {
+    public void deleteAllCommentByMemberSeqTest() {
         //
         this.commentDao.insertComment(this.commentList.get(2));
         this.commentDao.insertComment(this.commentList.get(3));
-        int memberSeq1 = this.commentList.get(1).getMemberSeq();
-        int memberSeq2 = this.commentList.get(2).getMemberSeq();
+        int memberSeq1 = this.commentList.get(2).getMemberSeq();
+        int memberSeq2 = this.commentList.get(3).getMemberSeq();
         Assertions.assertNotEquals(0, this.commentDao.getCommentListByMemberSeq(memberSeq1).size());
         Assertions.assertNotEquals(0, this.commentDao.getCommentListByMemberSeq(memberSeq2).size());
         //
-        this.commentDao.deleteAllCommentByArticleSeq(memberSeq1);
+        this.commentDao.deleteAllCommentByMemberSeq(memberSeq1);
         //
         Assertions.assertEquals(0, this.commentDao.getCommentListByMemberSeq(memberSeq1).size());
         Assertions.assertNotEquals(0, this.commentDao.getCommentListByMemberSeq(memberSeq2).size());
@@ -263,18 +269,18 @@ public class CommentDaoJdbcTest {
     @Test
     public void getCountAllCommentByMemberSeqTest() {
         //
-        int memberSeq1 = this.commentList.get(1).getMemberSeq();
         int memberSeq2 = this.commentList.get(2).getMemberSeq();
-        Assertions.assertEquals(0, this.commentDao.getCountAllCommentByMemberSeq(memberSeq1));
+        int memberSeq3 = this.commentList.get(3).getMemberSeq();
         Assertions.assertEquals(0, this.commentDao.getCountAllCommentByMemberSeq(memberSeq2));
+        Assertions.assertEquals(0, this.commentDao.getCountAllCommentByMemberSeq(memberSeq3));
         //
         this.commentDao.insertComment(this.commentList.get(3));
-        Assertions.assertEquals(1, this.commentDao.getCountAllCommentByMemberSeq(memberSeq2));
+        Assertions.assertEquals(1, this.commentDao.getCountAllCommentByMemberSeq(memberSeq3));
         this.commentDao.insertComment(this.commentList.get(4));
-        Assertions.assertEquals(2, this.commentDao.getCountAllCommentByMemberSeq(memberSeq2));
+        Assertions.assertEquals(2, this.commentDao.getCountAllCommentByMemberSeq(memberSeq3));
         this.commentDao.insertComment(this.commentList.get(5));
-        Assertions.assertEquals(3, this.commentDao.getCountAllCommentByMemberSeq(memberSeq2));
-        Assertions.assertEquals(0, this.commentDao.getCountAllCommentByMemberSeq(memberSeq1));
+        Assertions.assertEquals(3, this.commentDao.getCountAllCommentByMemberSeq(memberSeq3));
+        Assertions.assertEquals(0, this.commentDao.getCountAllCommentByMemberSeq(memberSeq2));
     }
 
     @Test
