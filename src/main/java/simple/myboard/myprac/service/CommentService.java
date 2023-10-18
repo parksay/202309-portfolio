@@ -1,11 +1,13 @@
 package simple.myboard.myprac.service;
 
+import simple.myboard.myprac.dao.CommentDao;
 import simple.myboard.myprac.vo.CommentVO;
 
 import java.util.List;
 
 public interface CommentService {
 
+    public abstract void setCommentDao(CommentDao commentDao);
     public abstract void addComment(CommentVO comment);
     public abstract CommentVO getCommentBySeq(int commentSeq);
     public abstract void updateComment(CommentVO comment);

@@ -12,10 +12,9 @@ public class CommentVO extends AuditProps {
     public CommentVO() {
     }
 
-    public CommentVO(int commentSeq, int articleSeq, int memberSeq, String contents) {
-        this.commentSeq = commentSeq;
-        this.articleSeq = articleSeq;
+    public CommentVO(int memberSeq, int articleSeq, String contents) {
         this.memberSeq = memberSeq;
+        this.articleSeq = articleSeq;
         this.contents = contents;
     }
 

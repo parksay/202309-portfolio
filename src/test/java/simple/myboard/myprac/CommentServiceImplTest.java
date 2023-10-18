@@ -5,33 +5,47 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
-import simple.myboard.myprac.service.CommentService;
+import org.springframework.dao.TransientDataAccessResourceException;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
+import simple.myboard.myprac.dao.CommentDaoJdbc;
+import simple.myboard.myprac.serviceimpl.CommentServiceImpl;
 import simple.myboard.myprac.vo.CommentVO;
 
+import javax.sql.DataSource;
 import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//@ExtendWith(SpringExtension.class)
-//@ContextConfiguration(locations    = {"file:src/main/resources/applicationContext.xml"})
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(locations={"file:src/main/resources/applicationContext.xml"})
+@Transactional
+// 클래스에 @Transactional 붙이면 그 클래스에 있는 모든 테스트 메소드들에 @Transactional 적용됨
+// 테스트 메소드에 붙는 @Transacitonal 은 default 값이 rollback=true
+// rollback 기능 끄고 싶은 메소드가 있다면 개별적으로 가서 @Rollback(false) 붙여주기
 public class CommentServiceImplTest {
 
     private static final Logger logger = LoggerFactory.getLogger(CommentServiceImplTest.class);
-    private CommentService commentService;
+    @Autowired
+    private CommentServiceImpl commentService;
+    @Autowired
+    private DataSource dataSource;
     List<CommentVO> commentList;
 
     @BeforeEach
     public void setUp() throws ParseException {
-        //
-        ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
-        this.commentService = context.getBean("commentService", CommentService.class);
         //
         TestUtil.clearTestData();
         int lastIndexMember1 = TestUtil.getLastIndexMember();
@@ -48,11 +62,6 @@ public class CommentServiceImplTest {
                 new CommentVO(lastIndexMember2, lastIndexArticle1, "testContents5", 0, newTime, newTime),
                 new CommentVO(lastIndexMember2, lastIndexArticle1, "testContents5", 0, newTime, newTime)
         );
-    }
-
-    @AfterEach
-    public void endEach() {
-        TestUtil.clearTestData();
     }
 
     @Test
@@ -85,8 +94,8 @@ public class CommentServiceImplTest {
         Assertions.assertEquals(comment1.getMemberSeq(), comment2.getMemberSeq());
         Assertions.assertEquals(comment1.getContents(), comment2.getContents());
         Assertions.assertEquals(comment1.getIsDel(), comment2.getIsDel());
-        Assertions.assertEquals(comment1.getCreateTime(), comment2.getCreateTime());
-        Assertions.assertEquals(comment1.getUpdateTime(), comment2.getUpdateTime());
+        Assertions.assertEquals(comment1.getCreateTime().truncatedTo(ChronoUnit.MINUTES), comment2.getCreateTime().truncatedTo(ChronoUnit.MINUTES));
+        Assertions.assertEquals(comment1.getUpdateTime().truncatedTo(ChronoUnit.MINUTES), comment2.getUpdateTime().truncatedTo(ChronoUnit.MINUTES));
     }
 
     private void checkSameCommentList(List<CommentVO> commentList1, List<CommentVO> commentList2) {
@@ -294,6 +303,46 @@ public class CommentServiceImplTest {
         this.commentService.addComment(this.commentList.get(4));
         Assertions.assertEquals(2, this.commentService.getCountAllCommentByArticleSeq(articleSeq2));
         Assertions.assertEquals(0, this.commentService.getCountAllCommentByArticleSeq(articleSeq1));
+    }
+
+
+
+
+    private static class TestCommentDao extends CommentDaoJdbc {
+        @Override
+        public CommentVO getCommentBySeq(int commentSeq) {
+            super.insertComment(new CommentVO(1, 3, "test"));
+            return null;
+        }
+    }
+
+
+    @Test
+    @DirtiesContext
+//    @Transactional(readOnly = true)
+    public void readOnlyTransactionTest() {
+        //
+        CommentServiceImplTest.TestCommentDao testCommentDao = new CommentServiceImplTest.TestCommentDao();
+        testCommentDao.setDataSource(this.dataSource);
+        this.commentService.setCommentDao(testCommentDao);
+        Assertions.assertThrows(TransientDataAccessResourceException.class, ()->{this.commentService.getCommentBySeq(0);});
+        //
+        // 아래는 복붙해서 만든 똑같은 로직인데 안 됨.
+        // ReadOnly 트랜잭션을 안 타고 그냥 DataIntegrity 예외가 남.
+        // 똑같은데  트랜잭션 적용이 안 되는 이유?
+        // 내 추측으로는 dataSource 때문.
+        // 이유는 dao 도 service 도 같은데 다른 건 dataSource 밖에 없기 때문.
+        // @Autowired 로 Service 를 가져올 때 Proxy 만들면서 TransactionManager 가 관리하는 연결은 DataSource1
+        // 근데 이 테스트 메소드 안에서 직접 ApplicationConext 생성해서 받아온 연결은 DataSource2
+        // 연결 정보는 같지만 연결이 마치 멀티 쓰레드를 쓰는 것처럼 서로 독립적인 연결이 돼 버린 게 아닐까.
+        // dataSource 도 직접 가져오고 commentService 도 직접 가져오면 같은 곳에서 가져와서 트랜잭션 적용됨.
+//        ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
+//        DataSource dataSource = context.getBean("dataSource", DataSource.class);
+//        CommentServiceImplTest.TestCommentDao testCommentDao = new CommentServiceImplTest.TestCommentDao();
+//        testCommentDao.setDataSource(dataSource);
+//        this.commentService.setCommentDao(testCommentDao);
+//        Assertions.assertThrows(TransientDataAccessResourceException.class, ()->{this.commentService.getCommentBySeq(0);});
+
     }
 
 
