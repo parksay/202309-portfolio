@@ -13,12 +13,15 @@ import org.springframework.dao.TransientDataAccessResourceException;
 import simple.myboard.myprac.dao.ArticleDao;
 import simple.myboard.myprac.dao.ArticleDaoJdbc;
 import simple.myboard.myprac.service.ArticleService;
+import simple.myboard.myprac.service.CommentService;
 import simple.myboard.myprac.serviceimpl.ArticleServiceImpl;
 import simple.myboard.myprac.vo.ArticleVO;
+import simple.myboard.myprac.vo.CommentVO;
 
 import javax.sql.DataSource;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 //@ExtendWith(SpringExtension.class)
@@ -30,13 +33,16 @@ public class ArticleServiceImplTest {
     List<ArticleVO> articleList;
     private ArticleDao articleDao;
     private ArticleServiceImpl articleService;
+    private CommentService commentService;
 
 
     @BeforeEach
     public void setUp() {
         ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
         this.articleDao = context.getBean("articleDao", ArticleDao.class);
-        this.articleService = context.getBean("articleService", ArticleServiceImpl.class);  // 내가 테스트하려는 특정 클래스
+        this.articleService = context.getBean("articleService", ArticleServiceImpl.class);  // 내가 테스트하려는 특정 클래스는 구현 클래스로 받기
+        this.commentService = context.getBean("commentService", CommentService.class);  // 테스트에 쓰이는 의존 클래스는 인터페이스로 받음
+        //
         TestUtil.clearTestData();
         int lastIndexMember = TestUtil.getLastIndexMember();
         this.articleList = Arrays.asList(
@@ -72,6 +78,13 @@ public class ArticleServiceImplTest {
 
 
     @Test
+    public void getArticleEmptyTest() {
+        int overIndex = this.articleService.getLastIndexArticle();
+        Assertions.assertNull(this.articleService.getArticleBySeq(overIndex));
+
+    }
+
+    @Test
     public void deleteArticleTest() {
         //
         this.articleService.addArticle(this.articleList.get(0));
@@ -89,7 +102,72 @@ public class ArticleServiceImplTest {
         Assertions.assertEquals(1, this.articleDao.getCountAllArticle());
         this.articleService.deleteArticleBySeq(lastIndex-3);
         Assertions.assertEquals(0, this.articleDao.getCountAllArticle());
+    }
 
+    @Test
+    public void deleteArticleAndCommentTest() {
+        // article1 과 article2 를 참조하는 comment 를 각각 3개씩 등록함.
+        // article2 만 삭제 후에 lastIndex 와 countAll 이 맞는지 확인
+        ArticleVO article1 = this.articleList.get(0);
+        this.articleService.addArticle(article1);
+        int lastIndexArticle1 = this.articleService.getLastIndexArticle();
+        ArticleVO article2 = this.articleList.get(1);
+        this.articleService.addArticle(article2);
+        int lastIndexArticle2 = this.articleService.getLastIndexArticle();
+        List<CommentVO> commentList1 = Arrays.asList(
+             new CommentVO(article1.getMemberSeq(), lastIndexArticle1, "test1"),
+             new CommentVO(article1.getMemberSeq(), lastIndexArticle1, "test2"),
+             new CommentVO(article1.getMemberSeq(), lastIndexArticle1, "test3")
+        );
+        List<CommentVO> commentList2 = Arrays.asList(
+                new CommentVO(article2.getMemberSeq(), lastIndexArticle2, "test4"),
+                new CommentVO(article2.getMemberSeq(), lastIndexArticle2, "test5"),
+                new CommentVO(article2.getMemberSeq(), lastIndexArticle2, "test6")
+        );
+        Iterator<CommentVO> iter1 = commentList1.iterator();
+        while(iter1.hasNext()) {
+            this.commentService.addComment(iter1.next());
+        }
+        int lastIndexCommentBefore = this.commentService.getLastIndexComment();
+        Iterator<CommentVO> iter2 = commentList2.iterator();
+        while(iter2.hasNext()) {
+            this.commentService.addComment(iter2.next());
+        }
+        int lastIndexCommentAfter = this.commentService.getLastIndexComment();
+        //
+        Assertions.assertTrue(lastIndexCommentBefore < lastIndexCommentAfter);
+        this.articleService.deleteArticleBySeq(lastIndexArticle2);
+        Assertions.assertEquals(lastIndexArticle1, this.articleService.getLastIndexArticle());
+        Assertions.assertEquals(lastIndexCommentBefore, this.commentService.getLastIndexComment());
+    }
+
+    @Test
+    public void deleteArticleAndCommentTransactionTest() {
+        // 3개를 등록 후에 삭제하다가 예외 발생 - 그대로인지?
+        ArticleVO article = this.articleList.get(0);
+        this.articleService.addArticle(article);
+        int lastIndexArticle = this.articleService.getLastIndexArticle();
+        List<CommentVO> commnetList = Arrays.asList(
+                new CommentVO(article.getMemberSeq(), lastIndexArticle, "test1"),
+                new CommentVO(article.getMemberSeq(), lastIndexArticle, "test2"),
+                new CommentVO(article.getMemberSeq(), lastIndexArticle, "test3")
+        );
+        Iterator<CommentVO> iter = commnetList.iterator();
+        while(iter.hasNext()) {
+            this.commentService.addComment(iter.next());
+        }
+        int lastIndexCommentBefore = this.commentService.getLastIndexComment();
+        //
+        ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
+        ArticleServiceImpl testArticleService = context.getBean("articleService", ArticleServiceImpl.class);
+        DataSource testDataSource = context.getBean("dataSource", DataSource.class);
+        ArticleTestDao testArticleDao = new ArticleTestDao();
+        testArticleDao.setDataSource(testDataSource);
+        testArticleService.setArticleDao(testArticleDao);
+        //
+        Assertions.assertThrows(ArticleTestException.class, ()->{testArticleService.deleteArticleBySeq(lastIndexArticle);});
+        Assertions.assertEquals(commnetList.size(), this.commentService.getCountAllComment());
+        Assertions.assertEquals(lastIndexCommentBefore, this.commentService.getLastIndexComment());
 
     }
 
@@ -144,7 +222,15 @@ public class ArticleServiceImplTest {
             super.insertArticle(new ArticleVO(1, "testTitle01", "testContents01"));
             return null;
         }
+        @Override
+        public void deleteArticleBySeq(int articleSeq) {
+            super.deleteArticleBySeq(articleSeq);
+            throw new ArticleTestException();
+        }
     }
 
-    // TODO: getEmptyFailTest
+    public static class ArticleTestException extends RuntimeException {
+        // empty class
+    }
+
 }
