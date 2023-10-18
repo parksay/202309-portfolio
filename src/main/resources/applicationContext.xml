@@ -37,6 +37,10 @@
         <property name="dataSource" ref="dataSource" />
     </bean>
 
+    <bean id="commentService" class="simple.myboard.myprac.serviceimpl.CommentServiceImpl" >
+        <property name="commentDao" ref="commentDao" />
+    </bean>
+
     <bean name="auditManager" class="simple.myboard.myprac.aop.AuditPropsAdvice" />
 
     <bean name="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager" >
