@@ -23,6 +23,7 @@
 
     <bean id="articleService" class="simple.myboard.myprac.serviceimpl.ArticleServiceImpl">
         <property name="articleDao" ref="articleDao" />
+        <property name="commentService" ref="commentService" />
     </bean>
 
     <bean id="memberDao" class="simple.myboard.myprac.dao.MemberDaoJdbc" >
@@ -50,6 +51,7 @@
     <tx:advice id="transactionAdvice" transaction-manager="transactionManager" >
         <tx:attributes>
             <tx:method name="get*" propagation="REQUIRED" read-only="true" timeout="30"/>
+            <tx:method name="*" propagation="REQUIRED"/>
         </tx:attributes>
     </tx:advice>
 
