@@ -19,6 +19,7 @@ import simple.myboard.myprac.vo.MemberVO;
 import javax.sql.DataSource;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 public class MemberServiceImplTest {
@@ -136,6 +137,72 @@ public class MemberServiceImplTest {
     }
 
     @Test
+    public void deleteMemberAndArticleTest() {
+        // member1 과 member2 를 참조하는 article 를 각각 3개씩 등록함.
+        // member2 만 삭제 후에 lastIndex 와 countAll 이 맞는지 확인
+        MemberVO member1 = this.memberList.get(0);
+        this.memberService.addMember(member1);
+        int lastIndexMember1 = this.memberService.getLastIndexMember();
+        MemberVO member2 = this.memberList.get(1);
+        this.memberService.addMember(member2);
+        int lastIndexMember2 = this.memberService.getLastIndexMember();
+        List<ArticleVO> articleList1 = Arrays.asList(
+                new ArticleVO(lastIndexMember1, "title1", "test1"),
+                new ArticleVO(lastIndexMember1, "title2", "test2"),
+                new ArticleVO(lastIndexMember1, "title3", "test3")
+        );
+        List<ArticleVO> articleList2 = Arrays.asList(
+                new ArticleVO(lastIndexMember2, "title4", "test4"),
+                new ArticleVO(lastIndexMember2, "title5", "test5"),
+                new ArticleVO(lastIndexMember2, "title6", "test6")
+        );
+        Iterator<ArticleVO> iter1 = articleList1.iterator();
+        while(iter1.hasNext()) {
+            this.articleService.addArticle(iter1.next());
+        }
+        int lastIndexArticleBefore = this.articleService.getLastIndexArticle();
+        Iterator<ArticleVO> iter2 = articleList2.iterator();
+        while(iter2.hasNext()) {
+            this.articleService.addArticle(iter2.next());
+        }
+        int lastIndexArticleAfter = this.articleService.getLastIndexArticle();
+        //
+        Assertions.assertTrue(lastIndexArticleBefore < lastIndexArticleAfter);
+        this.memberService.deleteMemberBySeq(lastIndexMember2);
+        Assertions.assertEquals(lastIndexMember1, this.memberService.getLastIndexMember());
+        Assertions.assertEquals(lastIndexArticleBefore, this.articleService.getLastIndexArticle());
+    }
+
+    @Test
+    public void deleteMemberAndArticleTransactionTest() {
+        // 3개를 등록 후에 삭제하다가 예외 발생 - 그대로인지?
+        MemberVO member = this.memberList.get(0);
+        this.memberService.addMember(member);
+        int lastIndexMember = this.memberService.getLastIndexMember();
+        List<ArticleVO> aticleList = Arrays.asList(
+                new ArticleVO(lastIndexMember, "title1", "test1"),
+                new ArticleVO(lastIndexMember, "title2", "test2"),
+                new ArticleVO(lastIndexMember, "title3", "test3")
+        );
+        Iterator<ArticleVO> iter = aticleList.iterator();
+        while(iter.hasNext()) {
+            this.articleService.addArticle(iter.next());
+        }
+        int lastIndexArticleBefore = this.articleService.getLastIndexArticle();
+        //
+        ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
+        MemberServiceImpl testMemberService = context.getBean("memberService", MemberServiceImpl.class);
+        DataSource testDataSource = context.getBean("dataSource", DataSource.class);
+        TestMemberDao testMemberDao = new TestMemberDao();
+        testMemberDao.setDataSource(testDataSource);
+        testMemberService.setMemberDao(testMemberDao);
+        //
+        Assertions.assertThrows(MemberServiceTestException.class, ()->{testMemberService.deleteMemberBySeq(lastIndexMember);});
+        Assertions.assertEquals(aticleList.size(), this.articleService.getCountAllArticle());
+        Assertions.assertEquals(lastIndexArticleBefore, this.articleService.getLastIndexArticle());
+    }
+
+    @Test
     public void readOnlyTransactionTest() {
         ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
         DataSource dataSource = context.getBean("dataSource", DataSource.class);
@@ -147,15 +214,6 @@ public class MemberServiceImplTest {
 
     }
 
-
-    private static class TestMemberDao extends MemberDaoJdbc {
-        @Override
-        public MemberVO getMemberBySeq(int memberSeq) {
-            super.insertMember(new MemberVO("test", "test", "test"));
-            return null;
-        }
-    }
-
     @Test
     public void deleteIntegrityFailTest() {
         this.memberService.addMember(this.memberList.get(0));
@@ -165,5 +223,24 @@ public class MemberServiceImplTest {
             this.memberService.deleteMemberBySeq(lastIndex);
         });
         ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
+    }
+
+
+
+    private static class TestMemberDao extends MemberDaoJdbc {
+        @Override
+        public MemberVO getMemberBySeq(int memberSeq) {
+            super.insertMember(new MemberVO("test", "test", "test"));
+            return null;
+        }
+        @Override
+        public void deleteMemberBySeq(int memberSeq) {
+            super.deleteMemberBySeq(memberSeq);
+            throw new MemberServiceTestException();
+        }
+    }
+
+    private static class MemberServiceTestException extends RuntimeException {
+        // empty class
     }
 }

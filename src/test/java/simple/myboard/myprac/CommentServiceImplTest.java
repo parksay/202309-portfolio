@@ -325,6 +325,8 @@ public class CommentServiceImplTest {
         CommentServiceImplTest.TestCommentDao testCommentDao = new CommentServiceImplTest.TestCommentDao();
         testCommentDao.setDataSource(this.dataSource);
         this.commentService.setCommentDao(testCommentDao);
+        // TODO - 뭔가 안 됨..;
+        // 아 알았다 Transaction 을 만들 때 service 의 get 매소드 하나의 시작과 끝에서 경계가 설정되어야 예외가 발생했을 때 메소드에서 실행했던 내용을 rollback 해주는 건데 Transcation 을 클래스에 @Transactional 달아버리면서 클래스 단위로 크게 열어버려서 안 되는 건가
         Assertions.assertThrows(TransientDataAccessResourceException.class, ()->{this.commentService.getCommentBySeq(0);});
         //
         // 아래는 복붙해서 만든 똑같은 로직인데 안 됨.

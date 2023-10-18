@@ -3,14 +3,20 @@ package simple.myboard.myprac.serviceimpl;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import simple.myboard.myprac.dao.MemberDao;
+import simple.myboard.myprac.service.ArticleService;
 import simple.myboard.myprac.service.MemberService;
 import simple.myboard.myprac.vo.MemberVO;
 
 public class MemberServiceImpl implements MemberService {
     private MemberDao memberDao;
+    private ArticleService articleService;
 
     public void setMemberDao(MemberDao memberDao) {
         this.memberDao = memberDao;
+    }
+
+    public void setArticleService(ArticleService articleService) {
+        this.articleService = articleService;
     }
 
     public MemberVO getMemberBySeq(int memberSeq) {
@@ -34,6 +40,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     public void deleteMemberBySeq(int memberSeq) {
+        this.articleService.deleteAllArticleByMemberSeq(memberSeq);
         this.memberDao.deleteMemberBySeq(memberSeq);
     }
 
