@@ -9,7 +9,7 @@ import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.TransientDataAccessResourceException;
 import simple.myboard.myprac.dao.MemberDao;
-import simple.myboard.myprac.dao.MemberDaoJdbc;
+import simple.myboard.myprac.daojdbc.MemberDaoJdbc;
 import simple.myboard.myprac.service.ArticleService;
 import simple.myboard.myprac.service.MemberService;
 import simple.myboard.myprac.serviceimpl.MemberServiceImpl;

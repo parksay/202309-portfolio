@@ -11,7 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.dao.TransientDataAccessResourceException;
 import simple.myboard.myprac.dao.ArticleDao;
-import simple.myboard.myprac.dao.ArticleDaoJdbc;
+import simple.myboard.myprac.daojdbc.ArticleDaoJdbc;
 import simple.myboard.myprac.service.ArticleService;
 import simple.myboard.myprac.service.CommentService;
 import simple.myboard.myprac.serviceimpl.ArticleServiceImpl;

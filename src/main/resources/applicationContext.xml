@@ -17,7 +17,7 @@
         <property name="password" value="0000" />
     </bean>
 
-    <bean id="articleDao" class="simple.myboard.myprac.dao.ArticleDaoJdbc">
+    <bean id="articleDao" class="simple.myboard.myprac.daojdbc.ArticleDaoJdbc">
         <property name="dataSource" ref="dataSource" />
     </bean>
 
@@ -26,7 +26,7 @@
         <property name="commentService" ref="commentService" />
     </bean>
 
-    <bean id="memberDao" class="simple.myboard.myprac.dao.MemberDaoJdbc" >
+    <bean id="memberDao" class="simple.myboard.myprac.daojdbc.MemberDaoJdbc" >
         <property name="dataSource" ref="dataSource" />
     </bean>
 
@@ -35,7 +35,7 @@
         <property name="articleService" ref="articleService" />
     </bean>
 
-    <bean id="commentDao" class="simple.myboard.myprac.dao.CommentDaoJdbc" >
+    <bean id="commentDao" class="simple.myboard.myprac.daojdbc.CommentDaoJdbc" >
         <property name="dataSource" ref="dataSource" />
     </bean>
 

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
-import simple.myboard.myprac.dao.MemberDaoJdbc;
+import simple.myboard.myprac.daojdbc.MemberDaoJdbc;
 import simple.myboard.myprac.vo.MemberVO;
 
 import java.time.LocalDateTime;

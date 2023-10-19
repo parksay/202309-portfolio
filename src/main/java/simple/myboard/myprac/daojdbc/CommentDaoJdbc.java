@@ -1,9 +1,10 @@
-package simple.myboard.myprac.dao;
+package simple.myboard.myprac.daojdbc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import simple.myboard.myprac.dao.CommentDao;
 import simple.myboard.myprac.vo.CommentVO;
 
 import javax.sql.DataSource;
