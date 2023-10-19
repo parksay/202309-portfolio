@@ -80,6 +80,11 @@ public class ArticleDaoJdbc implements ArticleDao {
     }
 
     @Override
+    public void deleteAllArticleByMemberSeq(int memberSeq) {
+        this.jdbcTemplate.update("DELETE FROM TB_ARTICLE WHERE member_seq = ?", memberSeq);
+    }
+
+    @Override
     public int getCountAllArticle() {
         return this.jdbcTemplate.query(
                 new PreparedStatementCreator() {

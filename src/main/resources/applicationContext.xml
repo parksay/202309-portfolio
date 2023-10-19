@@ -32,6 +32,7 @@
 
     <bean id="memberService" class="simple.myboard.myprac.serviceimpl.MemberServiceImpl" >
         <property name="memberDao" ref="memberDao" />
+        <property name="articleService" ref="articleService" />
     </bean>
 
     <bean id="commentDao" class="simple.myboard.myprac.dao.CommentDaoJdbc" >

@@ -41,6 +41,11 @@ public class ArticleServiceImpl implements ArticleService {
         this.articleDao.deleteArticleBySeq(articleSeq);
     }
 
+    public void deleteAllArticleByMemberSeq(int memberSeq) {
+        this.commentService.deleteAllCommentByMemberSeq(memberSeq);
+        this.articleDao.deleteAllArticleByMemberSeq(memberSeq);
+    }
+
     public int getLastIndexArticle() {
         return this.articleDao.getLastIndexArticle();
     }
