@@ -120,4 +120,15 @@ public class UtilTest {
         // 모든 요소가 서로 같지만 순서는 다름 - 순서가 상관없는 자료형인 Set 으로 변환해서 비교하거나 containsAll 로 서로 포함하는 관계인지 확인
     }
 
+    @Test
+    public void dateCompareTest() {
+        LocalDateTime timeBefore = LocalDateTime.of(2023,10, 18, 13, 17, 26);
+        LocalDateTime timeAfter = LocalDateTime.of(2023,10, 19, 13, 17, 26);
+        // 주체가 나중이고 파라미터가 이전이면 1 / 같으면 0 / 주체가 이전이고 파라미터가 나중이면 -1
+        Assertions.assertEquals(1, timeAfter.compareTo(timeBefore));
+        Assertions.assertTrue(timeAfter.isAfter(timeBefore));
+        // plusSeconds / plusMinutes / plusHours 다 있음. 숫자만큼 지난 시간을 리턴해줌.
+        Assertions.assertTrue(timeAfter.isAfter(timeBefore.plusSeconds(3)));
+
+    }
 }
