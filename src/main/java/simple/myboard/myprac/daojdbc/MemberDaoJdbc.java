@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import simple.myboard.myprac.dao.MemberDao;
-import simple.myboard.myprac.vo.MemberVO;
+import simple.myboard.myprac.domain.Member;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -23,10 +23,10 @@ public class MemberDaoJdbc implements MemberDao {
         this.jdbcTemplate.setDataSource(dataSource);
     }
 
-    private RowMapper<MemberVO> rowMapper = new RowMapper<MemberVO>() {
+    private RowMapper<Member> rowMapper = new RowMapper<Member>() {
         @Override
-        public MemberVO mapRow(ResultSet rs, int rowNum) throws SQLException {
-            MemberVO member = new MemberVO();
+        public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Member member = new Member();
             member.setMemberSeq(rs.getInt("member_seq"));
             member.setUserId(rs.getString("user_id"));
             member.setUserPsw(rs.getString("user_psw"));
@@ -40,7 +40,7 @@ public class MemberDaoJdbc implements MemberDao {
     };
 
     @Override
-    public void insertMember(MemberVO member) {
+    public void insertMember(Member member) {
         this.jdbcTemplate.update("INSERT INTO TB_MEMBER  (" +
                     "user_id, user_psw, user_name, is_del, create_time, update_time " +
                     ") VALUES ( ?, ?, ?, ?, ?, ? )",
@@ -48,12 +48,12 @@ public class MemberDaoJdbc implements MemberDao {
     }
 
     @Override
-    public MemberVO getMemberBySeq(int memberSeq) {
+    public Member getMemberBySeq(int memberSeq) {
         return this.jdbcTemplate.queryForObject("SELECT * FROM TB_MEMBER WHERE MEMBER_SEQ = ?", this.rowMapper, new Object[] {memberSeq});
     }
 
     @Override
-    public void updateMember(MemberVO member) {
+    public void updateMember(Member member) {
         this.jdbcTemplate.update("UPDATE TB_MEMBER SET " +
                 " user_id = ?, " +
                 " user_psw = ?,  " +

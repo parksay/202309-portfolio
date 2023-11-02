@@ -3,7 +3,7 @@ package simple.myboard.myprac.serviceimpl;
 import org.springframework.dao.EmptyResultDataAccessException;
 import simple.myboard.myprac.dao.CommentDao;
 import simple.myboard.myprac.service.CommentService;
-import simple.myboard.myprac.vo.CommentVO;
+import simple.myboard.myprac.domain.Comment;
 
 import java.util.List;
 
@@ -17,12 +17,12 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void addComment(CommentVO comment) {
+    public void addComment(Comment comment) {
         this.commentDao.insertComment(comment);
     }
 
     @Override
-    public CommentVO getCommentBySeq(int commentSeq) {
+    public Comment getCommentBySeq(int commentSeq) {
         try {
             return this.commentDao.getCommentBySeq(commentSeq);
         } catch (EmptyResultDataAccessException e) {
@@ -31,7 +31,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void updateComment(CommentVO comment) {
+    public void updateComment(Comment comment) {
         this.commentDao.updateComment(comment);
     }
 
@@ -46,8 +46,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentVO> getCommentListByMemberSeq(int memberSeq) {
-        List<CommentVO> commentList = this.commentDao.getCommentListByMemberSeq(memberSeq);
+    public List<Comment> getCommentListByMemberSeq(int memberSeq) {
+        List<Comment> commentList = this.commentDao.getCommentListByMemberSeq(memberSeq);
         if(commentList.size() < 1) {
             return null;
         }
@@ -55,8 +55,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentVO> getCommentListByArticleSeq(int articleSeq) {
-        List<CommentVO> commentList = this.commentDao.getCommentListByArticleSeq(articleSeq);
+    public List<Comment> getCommentListByArticleSeq(int articleSeq) {
+        List<Comment> commentList = this.commentDao.getCommentListByArticleSeq(articleSeq);
         if(commentList.size() < 1) {
             return null;
         }

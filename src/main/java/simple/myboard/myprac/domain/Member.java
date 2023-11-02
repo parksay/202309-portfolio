@@ -1,8 +1,8 @@
-package simple.myboard.myprac.vo;
+package simple.myboard.myprac.domain;
 
 import java.time.LocalDateTime;
 
-public class MemberVO extends AuditProps {
+public class Member extends AuditProps {
 
     private int memberSeq;
     private String userId;
@@ -11,17 +11,17 @@ public class MemberVO extends AuditProps {
 
 
 
-    public MemberVO() {
+    public Member() {
     }
 
-    public MemberVO(String userId, String userPsw, String userName) {
+    public Member(String userId, String userPsw, String userName) {
         this.userId = userId;
         this.userPsw = userPsw;
         this.userName = userName;
     }
 
 
-    public MemberVO(String userId, String userPsw, String userName, int isDel, LocalDateTime createTime, LocalDateTime updateTime) {
+    public Member(String userId, String userPsw, String userName, int isDel, LocalDateTime createTime, LocalDateTime updateTime) {
         this.userId = userId;
         this.userPsw = userPsw;
         this.userName = userName;

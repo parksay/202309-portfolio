@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import simple.myboard.myprac.daojdbc.ArticleDaoJdbc;
-import simple.myboard.myprac.vo.ArticleVO;
+import simple.myboard.myprac.domain.Article;
 
 import javax.sql.DataSource;
 import java.text.ParseException;
@@ -26,7 +26,7 @@ public class ArticleDaoJdbcTest {
     private static final Logger logger = LoggerFactory.getLogger(ArticleDaoJdbcTest.class);
 
     private ArticleDaoJdbc articleDao;
-    List<ArticleVO> articleList;
+    List<Article> articleList;
 
     @BeforeEach
     public void setUp() throws ParseException {
@@ -42,11 +42,11 @@ public class ArticleDaoJdbcTest {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         //
         articleList = Arrays.asList(
-                new ArticleVO(lastIndexMember, "testTitle01", "testContents01", 0, LocalDateTime.parse("2023-09-20 14:08:11", formatter), LocalDateTime.parse("2023-09-20 14:08:11", formatter)),
-                new ArticleVO(lastIndexMember, "testTitle02", "testContents02", 0, LocalDateTime.parse("2023-09-20 14:08:22", formatter), LocalDateTime.parse("2023-09-20 14:08:22", formatter)),
-                new ArticleVO(lastIndexMember, "testTitle03", "testContents03", 0, LocalDateTime.parse("2023-09-20 14:08:33", formatter), LocalDateTime.parse("2023-09-20 14:08:33", formatter)),
-                new ArticleVO(lastIndexMember, "testTitle04", "testContents04", 0, LocalDateTime.parse("2023-09-20 14:08:44", formatter), LocalDateTime.parse("2023-09-20 14:08:44", formatter)),
-                new ArticleVO(lastIndexMember, "testTitle05", "testContents05", 0, LocalDateTime.parse("2023-09-20 14:08:55", formatter), LocalDateTime.parse("2023-09-20 14:08:55", formatter))
+                new Article(lastIndexMember, "testTitle01", "testContents01", 0, LocalDateTime.parse("2023-09-20 14:08:11", formatter), LocalDateTime.parse("2023-09-20 14:08:11", formatter)),
+                new Article(lastIndexMember, "testTitle02", "testContents02", 0, LocalDateTime.parse("2023-09-20 14:08:22", formatter), LocalDateTime.parse("2023-09-20 14:08:22", formatter)),
+                new Article(lastIndexMember, "testTitle03", "testContents03", 0, LocalDateTime.parse("2023-09-20 14:08:33", formatter), LocalDateTime.parse("2023-09-20 14:08:33", formatter)),
+                new Article(lastIndexMember, "testTitle04", "testContents04", 0, LocalDateTime.parse("2023-09-20 14:08:44", formatter), LocalDateTime.parse("2023-09-20 14:08:44", formatter)),
+                new Article(lastIndexMember, "testTitle05", "testContents05", 0, LocalDateTime.parse("2023-09-20 14:08:55", formatter), LocalDateTime.parse("2023-09-20 14:08:55", formatter))
         );
     }
 
@@ -74,11 +74,11 @@ public class ArticleDaoJdbcTest {
     @Test
     public void updateArticleTest() {
         //
-        ArticleVO article0 = this.articleList.get(0);
+        Article article0 = this.articleList.get(0);
         this.articleDao.insertArticle(article0);
         int lastIndex1 = this.articleDao.getLastIndexArticle();
         article0.setArticleSeq(lastIndex1);
-        ArticleVO article1 = this.articleDao.getArticleBySeq(lastIndex1);
+        Article article1 = this.articleDao.getArticleBySeq(lastIndex1);
         this.checkSameArticle(article0, article1);
         //
         String newTitle = "this is new title";
@@ -91,7 +91,7 @@ public class ArticleDaoJdbcTest {
         //
         this.articleDao.updateArticle(article1);
         int lastIndex2 = this.articleDao.getLastIndexArticle();
-        ArticleVO article2 = this.articleDao.getArticleBySeq(lastIndex2);
+        Article article2 = this.articleDao.getArticleBySeq(lastIndex2);
 
         //
         this.checkSameArticle(article1, article2);
@@ -102,14 +102,14 @@ public class ArticleDaoJdbcTest {
     @Test
     public void getArticleTest() {
         //
-        ArticleVO article1 = this.articleList.get(1);
-        ArticleVO article2 = this.articleList.get(2);
+        Article article1 = this.articleList.get(1);
+        Article article2 = this.articleList.get(2);
         this.articleDao.insertArticle(article1);
         this.articleDao.insertArticle(article2);
         //
         int lastIndex = this.articleDao.getLastIndexArticle();
-        ArticleVO article3 = this.articleDao.getArticleBySeq(lastIndex-1);
-        ArticleVO article4 = this.articleDao.getArticleBySeq(lastIndex);
+        Article article3 = this.articleDao.getArticleBySeq(lastIndex-1);
+        Article article4 = this.articleDao.getArticleBySeq(lastIndex);
         // check same
         article1.setArticleSeq(lastIndex-1);
         article2.setArticleSeq(lastIndex);
@@ -121,10 +121,10 @@ public class ArticleDaoJdbcTest {
     @Test
     public void deleteArticleTest() {
         //
-        ArticleVO article1 = this.articleList.get(1);
-        ArticleVO article2 = this.articleList.get(2);
-        ArticleVO article3 = this.articleList.get(3);
-        ArticleVO article4 = this.articleList.get(4);
+        Article article1 = this.articleList.get(1);
+        Article article2 = this.articleList.get(2);
+        Article article3 = this.articleList.get(3);
+        Article article4 = this.articleList.get(4);
         //
         this.articleDao.insertArticle(article1);
         this.articleDao.insertArticle(article2);
@@ -148,7 +148,7 @@ public class ArticleDaoJdbcTest {
         Assertions.assertEquals(0, this.articleDao.getCountAllArticle());
     }
 
-    private void checkSameArticle(ArticleVO article1, ArticleVO article2) {
+    private void checkSameArticle(Article article1, Article article2) {
         Assertions.assertEquals(article1.getArticleSeq(), article2.getArticleSeq());
         Assertions.assertEquals(article1.getMemberSeq(), article2.getMemberSeq());
         Assertions.assertEquals(article1.getTitle(), article2.getTitle());

@@ -5,7 +5,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import simple.myboard.myprac.dao.MemberDao;
 import simple.myboard.myprac.service.ArticleService;
 import simple.myboard.myprac.service.MemberService;
-import simple.myboard.myprac.vo.MemberVO;
+import simple.myboard.myprac.domain.Member;
 
 public class MemberServiceImpl implements MemberService {
     private MemberDao memberDao;
@@ -19,7 +19,7 @@ public class MemberServiceImpl implements MemberService {
         this.articleService = articleService;
     }
 
-    public MemberVO getMemberBySeq(int memberSeq) {
+    public Member getMemberBySeq(int memberSeq) {
         try {
             return this.memberDao.getMemberBySeq(memberSeq);
         } catch (EmptyResultDataAccessException e) {
@@ -27,7 +27,7 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
-    public void addMember(MemberVO member) throws DataIntegrityViolationException {
+    public void addMember(Member member) throws DataIntegrityViolationException {
         // null check
         if(member.getUserId() == null || member.getUserPsw() == null || member.getUserName() == null) {
             throw new DataIntegrityViolationException("cannot be null: user_id, user_psw, user_name");
@@ -35,7 +35,7 @@ public class MemberServiceImpl implements MemberService {
         this.memberDao.insertMember(member);
     }
 
-    public void updateMember(MemberVO member) {
+    public void updateMember(Member member) {
         this.memberDao.updateMember(member);
     }
 

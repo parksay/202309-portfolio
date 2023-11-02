@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import simple.myboard.myprac.dao.ArticleDao;
-import simple.myboard.myprac.vo.ArticleVO;
+import simple.myboard.myprac.domain.Article;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -20,10 +20,10 @@ public class ArticleDaoJdbc implements ArticleDao {
     private JdbcTemplate jdbcTemplate;
     private static final Logger logger = LoggerFactory.getLogger(ArticleDaoJdbc.class);
 
-    private RowMapper<ArticleVO> rowMapper = new RowMapper<ArticleVO>() {
+    private RowMapper<Article> rowMapper = new RowMapper<Article>() {
         @Override
-        public ArticleVO mapRow(ResultSet rs, int rowNum) throws SQLException {
-            ArticleVO article = new ArticleVO();
+        public Article mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Article article = new Article();
             article.setArticleSeq(rs.getInt("article_seq"));
             article.setMemberSeq(rs.getInt("member_seq"));
             article.setTitle(rs.getString("title"));
@@ -43,7 +43,7 @@ public class ArticleDaoJdbc implements ArticleDao {
 
 
     @Override
-    public void insertArticle(ArticleVO article) {
+    public void insertArticle(Article article) {
         this.jdbcTemplate.update("INSERT INTO TB_ARTICLE (" +
                         " member_seq, title, contents, is_del, create_time, update_time " +
                         ") VALUES ( ?, ?, ?, ?, ?, ?)",
@@ -51,7 +51,7 @@ public class ArticleDaoJdbc implements ArticleDao {
     }
 
     @Override
-    public void updateArticle(ArticleVO article) {
+    public void updateArticle(Article article) {
         this.jdbcTemplate.update(
                 "UPDATE TB_ARTICLE SET " +
                         " member_seq = ?, " +
@@ -71,7 +71,7 @@ public class ArticleDaoJdbc implements ArticleDao {
     }
 
     @Override
-    public ArticleVO getArticleBySeq(int articleSeq) {
+    public Article getArticleBySeq(int articleSeq) {
         return this.jdbcTemplate.queryForObject("SELECT * FROM TB_ARTICLE WHERE article_seq = ?", this.rowMapper, new Object[] {articleSeq});
     }
 

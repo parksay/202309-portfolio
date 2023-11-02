@@ -2,7 +2,7 @@ package simple.myboard.myprac.aop;
 
 import org.aopalliance.intercept.MethodInvocation;
 import org.aopalliance.intercept.MethodInterceptor;
-import simple.myboard.myprac.vo.AuditProps;
+import simple.myboard.myprac.domain.AuditProps;
 
 
 public class AuditPropsAdvice implements MethodInterceptor {

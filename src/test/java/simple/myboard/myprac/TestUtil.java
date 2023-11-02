@@ -7,8 +7,8 @@ import simple.myboard.myprac.dao.CommentDao;
 import simple.myboard.myprac.dao.MemberDao;
 import simple.myboard.myprac.service.ArticleService;
 import simple.myboard.myprac.service.MemberService;
-import simple.myboard.myprac.vo.ArticleVO;
-import simple.myboard.myprac.vo.MemberVO;
+import simple.myboard.myprac.domain.Article;
+import simple.myboard.myprac.domain.Member;
 
 public class TestUtil {
 
@@ -26,7 +26,7 @@ public class TestUtil {
     public static int getLastIndexMember() {
         MemberService memberService = TestUtil.context.getBean("memberService", MemberService.class);
         int lastIndex = memberService.getLastIndexMember();
-        memberService.addMember(new MemberVO("test"+lastIndex, "testPsw", "testName"));
+        memberService.addMember(new Member("test"+lastIndex, "testPsw", "testName"));
         return memberService.getLastIndexMember();
     }
 
@@ -34,7 +34,7 @@ public class TestUtil {
         MemberService memberService = TestUtil.context.getBean("memberService", MemberService.class);
         ArticleService articleService = TestUtil.context.getBean("articleService", ArticleService.class);
         int lastIndexMember = memberService.getLastIndexMember();
-        articleService.addArticle(new ArticleVO(lastIndexMember, "testTitle", "testContents"));
+        articleService.addArticle(new Article(lastIndexMember, "testTitle", "testContents"));
         return articleService.getLastIndexArticle();
     }
 }

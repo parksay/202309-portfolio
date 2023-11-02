@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import simple.myboard.myprac.daojdbc.MemberDaoJdbc;
-import simple.myboard.myprac.vo.MemberVO;
+import simple.myboard.myprac.domain.Member;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -17,7 +17,7 @@ import java.util.List;
 public class MemberDaoJdbcTest {
 
     private MemberDaoJdbc memberDao;
-    private List<MemberVO> memberList;
+    private List<Member> memberList;
 
     @BeforeEach
     public void setUp() {
@@ -29,11 +29,11 @@ public class MemberDaoJdbcTest {
         //
         LocalDateTime newTime = LocalDateTime.of(2023, 10, 6, 14, 26, 47);
         memberList = Arrays.asList(
-                new MemberVO("testid01", "testpsw01", "testname01", 0, newTime, newTime),
-                new MemberVO("testid02", "testpsw02", "testname02", 0, newTime, newTime),
-                new MemberVO("testid03", "testpsw03", "testname03", 0, newTime, newTime),
-                new MemberVO("testid04", "testpsw04", "testname04", 0, newTime, newTime),
-                new MemberVO("testid05", "testpsw05", "testname05", 0, newTime, newTime)
+                new Member("testid01", "testpsw01", "testname01", 0, newTime, newTime),
+                new Member("testid02", "testpsw02", "testname02", 0, newTime, newTime),
+                new Member("testid03", "testpsw03", "testname03", 0, newTime, newTime),
+                new Member("testid04", "testpsw04", "testname04", 0, newTime, newTime),
+                new Member("testid05", "testpsw05", "testname05", 0, newTime, newTime)
         );
     }
 
@@ -44,9 +44,9 @@ public class MemberDaoJdbcTest {
     @Test
     public void addAndGetMemberTest() {
         //
-        MemberVO member0 = this.memberList.get(0);
-        MemberVO member1 = this.memberList.get(1);
-        MemberVO member2 = this.memberList.get(2);
+        Member member0 = this.memberList.get(0);
+        Member member1 = this.memberList.get(1);
+        Member member2 = this.memberList.get(2);
         this.memberDao.insertMember(member0);
         Assertions.assertEquals(1, this.memberDao.getCountAllMember());
         this.memberDao.insertMember(member1);
@@ -61,7 +61,7 @@ public class MemberDaoJdbcTest {
     }
 
 
-    private void checkSameMember(MemberVO member1, MemberVO member2) {
+    private void checkSameMember(Member member1, Member member2) {
         Assertions.assertEquals(member1.getUserId(), member2.getUserId());
         Assertions.assertEquals(member1.getUserPsw(), member2.getUserPsw());
         Assertions.assertEquals(member1.getUserName(), member2.getUserName());
@@ -83,11 +83,11 @@ public class MemberDaoJdbcTest {
     @Test
     public void updateMemberTest() {
         //
-        MemberVO member0 = this.memberList.get(0);
+        Member member0 = this.memberList.get(0);
         this.memberDao.insertMember(member0);
         int lastIndex1 = this.memberDao.getLastIndexMember();
         member0.setMemberSeq(lastIndex1);
-        MemberVO member1 = this.memberDao.getMemberBySeq(lastIndex1);
+        Member member1 = this.memberDao.getMemberBySeq(lastIndex1);
         this.checkSameMember(member0, member1);
         //
         member1.setUserId("newId");
@@ -100,7 +100,7 @@ public class MemberDaoJdbcTest {
         this.memberDao.updateMember(member1);
         //
         int lastIndex2 = this.memberDao.getLastIndexMember();
-        MemberVO member2 = this.memberDao.getMemberBySeq(lastIndex2);
+        Member member2 = this.memberDao.getMemberBySeq(lastIndex2);
         checkSameMember(member1, member2);
     }
 

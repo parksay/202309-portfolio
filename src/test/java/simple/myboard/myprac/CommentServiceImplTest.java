@@ -15,7 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 import simple.myboard.myprac.daojdbc.CommentDaoJdbc;
 import simple.myboard.myprac.serviceimpl.CommentServiceImpl;
-import simple.myboard.myprac.vo.CommentVO;
+import simple.myboard.myprac.domain.Comment;
 
 import javax.sql.DataSource;
 import java.text.ParseException;
@@ -39,7 +39,7 @@ public class CommentServiceImplTest {
     private CommentServiceImpl commentService;
     @Autowired
     private DataSource dataSource;
-    List<CommentVO> commentList;
+    List<Comment> commentList;
 
     @BeforeEach
     public void setUp() throws ParseException {
@@ -51,23 +51,23 @@ public class CommentServiceImplTest {
         int lastIndexArticle2 = TestUtil.getLastIndexArticle();
         LocalDateTime newTime = LocalDateTime.of(2023, 10, 16, 10, 51, 36);
         this.commentList = Arrays.asList(
-                new CommentVO(lastIndexMember1, lastIndexArticle1, "testContents1", 0, newTime, newTime),
-                new CommentVO(lastIndexMember1, lastIndexArticle1, "testContents2", 0, newTime, newTime),
-                new CommentVO(lastIndexMember1, lastIndexArticle2, "testContents3", 0, newTime, newTime),
-                new CommentVO(lastIndexMember2, lastIndexArticle2, "testContents4", 0, newTime, newTime),
-                new CommentVO(lastIndexMember2, lastIndexArticle2, "testContents5", 0, newTime, newTime),
-                new CommentVO(lastIndexMember2, lastIndexArticle1, "testContents5", 0, newTime, newTime),
-                new CommentVO(lastIndexMember2, lastIndexArticle1, "testContents5", 0, newTime, newTime)
+                new Comment(lastIndexMember1, lastIndexArticle1, "testContents1", 0, newTime, newTime),
+                new Comment(lastIndexMember1, lastIndexArticle1, "testContents2", 0, newTime, newTime),
+                new Comment(lastIndexMember1, lastIndexArticle2, "testContents3", 0, newTime, newTime),
+                new Comment(lastIndexMember2, lastIndexArticle2, "testContents4", 0, newTime, newTime),
+                new Comment(lastIndexMember2, lastIndexArticle2, "testContents5", 0, newTime, newTime),
+                new Comment(lastIndexMember2, lastIndexArticle1, "testContents5", 0, newTime, newTime),
+                new Comment(lastIndexMember2, lastIndexArticle1, "testContents5", 0, newTime, newTime)
         );
     }
 
     @Test
     public void addAndGetCommentTest() {
         //
-        CommentVO comment0 = this.commentList.get(0);
-        CommentVO comment2 = this.commentList.get(2);
-        CommentVO comment3 = this.commentList.get(3);
-        CommentVO comment5 = this.commentList.get(5);
+        Comment comment0 = this.commentList.get(0);
+        Comment comment2 = this.commentList.get(2);
+        Comment comment3 = this.commentList.get(3);
+        Comment comment5 = this.commentList.get(5);
         // 하나씩 등록되는 거 맞는지
         Assertions.assertEquals(0, this.commentService.getCountAllComment());
         this.commentService.addComment(comment0);
@@ -86,7 +86,7 @@ public class CommentServiceImplTest {
         this.checkSameComment(comment0, this.commentService.getCommentBySeq(lastIndexComment-3));
     }
 
-    private void checkSameComment(CommentVO comment1, CommentVO comment2) {
+    private void checkSameComment(Comment comment1, Comment comment2) {
         Assertions.assertEquals(comment1.getArticleSeq(), comment2.getArticleSeq());
         Assertions.assertEquals(comment1.getMemberSeq(), comment2.getMemberSeq());
         Assertions.assertEquals(comment1.getContents(), comment2.getContents());
@@ -95,7 +95,7 @@ public class CommentServiceImplTest {
         Assertions.assertEquals(comment1.getUpdateTime().truncatedTo(ChronoUnit.MINUTES), comment2.getUpdateTime().truncatedTo(ChronoUnit.MINUTES));
     }
 
-    private void checkSameCommentList(List<CommentVO> commentList1, List<CommentVO> commentList2) {
+    private void checkSameCommentList(List<Comment> commentList1, List<Comment> commentList2) {
         //
         int length1 = commentList1.size();
         int length2 = commentList2.size();
@@ -116,10 +116,10 @@ public class CommentServiceImplTest {
     @Test
     public void updateCommentTest() {
         // 새로 넣은 comment 와 불러온 comment 가 같은지 확인
-        CommentVO comment0 = this.commentList.get(0);
+        Comment comment0 = this.commentList.get(0);
         this.commentService.addComment(comment0);
         int lastIndexComment = this.commentService.getLastIndexComment();
-        CommentVO comment1 = this.commentService.getCommentBySeq(lastIndexComment);
+        Comment comment1 = this.commentService.getCommentBySeq(lastIndexComment);
         this.checkSameComment(comment0, comment1);
         // update - 로컬
         LocalDateTime updateTime = LocalDateTime.of(2023, 10, 13, 21, 17, 53);
@@ -133,7 +133,7 @@ public class CommentServiceImplTest {
         this.commentService.updateComment(comment1);
         int lastIndexComment2 = this.commentService.getLastIndexComment();
         Assertions.assertEquals(lastIndexComment, lastIndexComment2);
-        CommentVO comment2 = this.commentService.getCommentBySeq(lastIndexComment2);
+        Comment comment2 = this.commentService.getCommentBySeq(lastIndexComment2);
         this.checkSameComment(comment1, comment2);
 
     }
@@ -174,21 +174,21 @@ public class CommentServiceImplTest {
     @Test
     public void getCommentListByMemberSeqTest() {
         // 픽스처 comment 모두 등록
-        Iterator<CommentVO> iterLocal = this.commentList.iterator();
+        Iterator<Comment> iterLocal = this.commentList.iterator();
         while(iterLocal.hasNext()) {
             this.commentService.addComment(iterLocal.next());
         }
         Assertions.assertEquals(this.commentList.size(), this.commentService.getCountAllComment());
         // 픽스처 list 에 filter 돌려서 조건에 맞는 item 만으로 구성된 list 새로 만들기
         int targetMemberIndex = this.commentList.get(0).getMemberSeq();
-        List<CommentVO> commentListLocal = this.commentList.stream().filter(e -> e.getMemberSeq() == targetMemberIndex).collect(Collectors.toList());
+        List<Comment> commentListLocal = this.commentList.stream().filter(e -> e.getMemberSeq() == targetMemberIndex).collect(Collectors.toList());
         // 등록된 comment 중에 member_seq 가 특정 값인 comment 만 list 로 받아오기
-        List<CommentVO> commentListGet = this.commentService.getCommentListByMemberSeq(targetMemberIndex);
+        List<Comment> commentListGet = this.commentService.getCommentListByMemberSeq(targetMemberIndex);
         // 픽스처 list 와 받아온  list 비교해 보기
         Assertions.assertEquals(commentListGet.size(), commentListLocal.size());
-        Iterator<CommentVO> iterGet = commentListGet.iterator();
+        Iterator<Comment> iterGet = commentListGet.iterator();
         while (iterGet.hasNext()) {
-            CommentVO item = iterGet.next();
+            Comment item = iterGet.next();
             Assertions.assertEquals(item.getMemberSeq(), targetMemberIndex);
         }
     }
@@ -204,21 +204,21 @@ public class CommentServiceImplTest {
     public void getCommentListByArticleSeqTest() {
         //
         // 일단 테스트 데이터 다 넣음
-        Iterator<CommentVO> iter = this.commentList.iterator();
+        Iterator<Comment> iter = this.commentList.iterator();
         while(iter.hasNext()) {
             this.commentService.addComment(iter.next());
         }
         //
         // this.commentList 를 articleSeq1 로 필터링한 리스트와 DB 에서 articleSeq1 꺼내온 리스트가 같은지
         int articleSeq1 = this.commentList.get(1).getArticleSeq();
-        List<CommentVO> listGet1 = this.commentService.getCommentListByArticleSeq(articleSeq1);
-        List<CommentVO> listLocal1 = this.commentList.stream().filter((ele)->ele.getArticleSeq() == articleSeq1).collect(Collectors.toList());
+        List<Comment> listGet1 = this.commentService.getCommentListByArticleSeq(articleSeq1);
+        List<Comment> listLocal1 = this.commentList.stream().filter((ele)->ele.getArticleSeq() == articleSeq1).collect(Collectors.toList());
         this.checkSameCommentList(listGet1, listLocal1);
         //
         // this.commentList 를 articleSeq2 로 필터링한 리스트와 DB 에서 articleSeq2 꺼내온 리스트가 같은지
         int articleSeq2 = this.commentList.get(2).getArticleSeq();
-        List<CommentVO> listGet2 = this.commentService.getCommentListByArticleSeq(articleSeq2);
-        List<CommentVO> listLocal2 = this.commentList.stream().filter((ele)->ele.getArticleSeq() == articleSeq2).collect(Collectors.toList());
+        List<Comment> listGet2 = this.commentService.getCommentListByArticleSeq(articleSeq2);
+        List<Comment> listLocal2 = this.commentList.stream().filter((ele)->ele.getArticleSeq() == articleSeq2).collect(Collectors.toList());
         this.checkSameCommentList(listGet2, listLocal2);
 
     }
@@ -307,8 +307,8 @@ public class CommentServiceImplTest {
 
     private static class TestCommentDao extends CommentDaoJdbc {
         @Override
-        public CommentVO getCommentBySeq(int commentSeq) {
-            super.insertComment(new CommentVO(1, 3, "test"));
+        public Comment getCommentBySeq(int commentSeq) {
+            super.insertComment(new Comment(1, 3, "test"));
             return null;
         }
     }

@@ -1,18 +1,18 @@
 package simple.myboard.myprac.service;
 
 import simple.myboard.myprac.dao.ArticleDao;
-import simple.myboard.myprac.vo.ArticleVO;
+import simple.myboard.myprac.domain.Article;
 
 public interface ArticleService {
 
 
     public abstract void setArticleDao(ArticleDao articleDao);
 
-    public abstract void addArticle(ArticleVO article);
+    public abstract void addArticle(Article article);
 
-    public abstract void updateArticle(ArticleVO article);
+    public abstract void updateArticle(Article article);
 
-    public abstract ArticleVO getArticleBySeq(int seq);
+    public abstract Article getArticleBySeq(int seq);
 
     public abstract void deleteArticleBySeq(int articleSeq);
 

@@ -4,7 +4,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import simple.myboard.myprac.dao.ArticleDao;
 import simple.myboard.myprac.service.ArticleService;
 import simple.myboard.myprac.service.CommentService;
-import simple.myboard.myprac.vo.ArticleVO;
+import simple.myboard.myprac.domain.Article;
 
 public class ArticleServiceImpl implements ArticleService {
 
@@ -19,16 +19,16 @@ public class ArticleServiceImpl implements ArticleService {
         this.commentService = commentService;
     }
 
-    public void addArticle(ArticleVO article) {
+    public void addArticle(Article article) {
         // TODO - null check 여기서 하기
         this.articleDao.insertArticle(article);
     }
 
-    public void updateArticle(ArticleVO article) {
+    public void updateArticle(Article article) {
         this.articleDao.updateArticle(article);
     }
 
-    public ArticleVO getArticleBySeq(int seq) {
+    public Article getArticleBySeq(int seq) {
         try {
             return this.articleDao.getArticleBySeq(seq);
         } catch (EmptyResultDataAccessException e) {

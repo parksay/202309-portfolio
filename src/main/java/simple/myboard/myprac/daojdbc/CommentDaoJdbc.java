@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import simple.myboard.myprac.dao.CommentDao;
-import simple.myboard.myprac.vo.CommentVO;
+import simple.myboard.myprac.domain.Comment;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -24,10 +24,10 @@ public class CommentDaoJdbc implements CommentDao {
         this.jdbcTemplate.setDataSource(dataSource);
     }
 
-    private RowMapper<CommentVO> rowMapper = new RowMapper<CommentVO>() {
+    private RowMapper<Comment> rowMapper = new RowMapper<Comment>() {
         @Override
-        public CommentVO mapRow(ResultSet rs, int rowNum) throws SQLException {
-            CommentVO comment = new CommentVO();
+        public Comment mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Comment comment = new Comment();
             comment.setCommentSeq(rs.getInt("comment_seq"));
             comment.setArticleSeq(rs.getInt("article_seq"));
             comment.setMemberSeq(rs.getInt("member_seq"));
@@ -41,7 +41,7 @@ public class CommentDaoJdbc implements CommentDao {
     };
 
     @Override
-    public void insertComment(CommentVO comment) {
+    public void insertComment(Comment comment) {
         this.jdbcTemplate.update("INSERT INTO TB_COMMENT  (" +
                         "member_seq, article_seq, contents, is_del, create_time, update_time " +
                         ") VALUES ( ?, ?, ?, ?, ?, ? )",
@@ -49,12 +49,12 @@ public class CommentDaoJdbc implements CommentDao {
     }
 
     @Override
-    public CommentVO getCommentBySeq(int commentSeq) {
+    public Comment getCommentBySeq(int commentSeq) {
         return this.jdbcTemplate.queryForObject("SELECT * FROM TB_COMMENT WHERE COMMENT_SEQ = ?", this.rowMapper, new Object[] {commentSeq});
     }
 
     @Override
-    public void updateComment(CommentVO comment) {
+    public void updateComment(Comment comment) {
         this.jdbcTemplate.update("UPDATE TB_COMMENT SET " +
                         " member_seq = ?, " +
                         " article_seq = ?,  " +
@@ -84,12 +84,12 @@ public class CommentDaoJdbc implements CommentDao {
     }
 
     @Override
-    public List<CommentVO> getCommentListByMemberSeq(int memberSeq) {
+    public List<Comment> getCommentListByMemberSeq(int memberSeq) {
         return this.jdbcTemplate.query("SELECT * FROM TB_COMMENT WHERE member_seq = ?", this.rowMapper, new Object[] {memberSeq});
     }
 
     @Override
-    public List<CommentVO> getCommentListByArticleSeq(int articleSeq) {
+    public List<Comment> getCommentListByArticleSeq(int articleSeq) {
         return this.jdbcTemplate.query("SELECT * FROM TB_COMMENT WHERE article_seq = ?", this.rowMapper, new Object[] {articleSeq});
 
     }

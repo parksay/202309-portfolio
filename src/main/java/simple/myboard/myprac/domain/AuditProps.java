@@ -1,4 +1,4 @@
-package simple.myboard.myprac.vo;
+package simple.myboard.myprac.domain;
 
 import java.time.LocalDateTime;
 

@@ -1,39 +1,32 @@
-package simple.myboard.myprac.vo;
+package simple.myboard.myprac.domain;
 
 import java.time.LocalDateTime;
 
-public class CommentVO extends AuditProps {
+public class Article extends AuditProps {
 
-    private int commentSeq;
     private int articleSeq;
     private int memberSeq;
+    private String title;
     private String contents;
 
-    public CommentVO() {
+
+    public Article() {
     }
 
-    public CommentVO(int memberSeq, int articleSeq, String contents) {
+    public Article(int memberSeq, String title, String contents) {
         this.memberSeq = memberSeq;
-        this.articleSeq = articleSeq;
+        this.title = title;
         this.contents = contents;
     }
 
-
-    public CommentVO(int memberSeq, int articleSeq, String contents, int isDel, LocalDateTime createTime, LocalDateTime updateTime) {
-        this.memberSeq = memberSeq;
+    public Article(int memberSeq, String title, String contents, int isDel, LocalDateTime createTime, LocalDateTime updateTime) {
         this.articleSeq = articleSeq;
+        this.memberSeq = memberSeq;
+        this.title = title;
         this.contents = contents;
         super.setIsDel(isDel);
         super.setCreateTime(createTime);
         super.setUpdateTime(updateTime);
-    }
-
-    public int getCommentSeq() {
-        return commentSeq;
-    }
-
-    public void setCommentSeq(int commentSeq) {
-        this.commentSeq = commentSeq;
     }
 
     public int getArticleSeq() {
@@ -52,6 +45,14 @@ public class CommentVO extends AuditProps {
         this.memberSeq = memberSeq;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getContents() {
         return contents;
     }
@@ -59,5 +60,5 @@ public class CommentVO extends AuditProps {
     public void setContents(String contents) {
         this.contents = contents;
     }
-    
+
 }
