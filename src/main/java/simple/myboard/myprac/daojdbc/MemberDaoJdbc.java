@@ -27,7 +27,7 @@ public class MemberDaoJdbc implements MemberDao {
         @Override
         public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
             Member member = new Member();
-            member.setMemberSeq(rs.getInt("member_seq"));
+            member.setMemberSeq(rs.getLong("member_seq"));
             member.setUserId(rs.getString("user_id"));
             member.setUserPsw(rs.getString("user_psw"));
             member.setUserName(rs.getString("user_name"));
@@ -48,7 +48,7 @@ public class MemberDaoJdbc implements MemberDao {
     }
 
     @Override
-    public Member getMemberBySeq(int memberSeq) {
+    public Member getMemberBySeq(Long memberSeq) {
         return this.jdbcTemplate.queryForObject("SELECT * FROM TB_MEMBER WHERE MEMBER_SEQ = ?", this.rowMapper, new Object[] {memberSeq});
     }
 
@@ -72,7 +72,7 @@ public class MemberDaoJdbc implements MemberDao {
     }
 
     @Override
-    public void deleteMemberBySeq(int memberSeq) {
+    public void deleteMemberBySeq(Long memberSeq) {
         this.jdbcTemplate.update("DELETE FROM TB_MEMBER WHERE member_seq = ?", memberSeq);
 
     }
@@ -88,7 +88,7 @@ public class MemberDaoJdbc implements MemberDao {
     }
 
     @Override
-    public int getLastIndexMember() {
-        return this.jdbcTemplate.query("SELECT MAX(MEMBER_SEQ) FROM TB_MEMBER", (rs)->{ rs.next(); return rs.getInt(1); });
+    public Long getLastIndexMember() {
+        return this.jdbcTemplate.query("SELECT MAX(MEMBER_SEQ) FROM TB_MEMBER", (rs)->{ rs.next(); return Long.valueOf(rs.getInt(1)); });
     }
 }

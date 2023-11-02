@@ -19,7 +19,7 @@ public class MemberServiceImpl implements MemberService {
         this.articleService = articleService;
     }
 
-    public Member getMemberBySeq(int memberSeq) {
+    public Member getMemberBySeq(Long memberSeq) {
         try {
             return this.memberDao.getMemberBySeq(memberSeq);
         } catch (EmptyResultDataAccessException e) {
@@ -39,12 +39,12 @@ public class MemberServiceImpl implements MemberService {
         this.memberDao.updateMember(member);
     }
 
-    public void deleteMemberBySeq(int memberSeq) {
+    public void deleteMemberBySeq(Long memberSeq) {
         this.articleService.deleteAllArticleByMemberSeq(memberSeq);
         this.memberDao.deleteMemberBySeq(memberSeq);
     }
 
-    public int getLastIndexMember() {
+    public Long getLastIndexMember() {
         return this.memberDao.getLastIndexMember();
     }
 

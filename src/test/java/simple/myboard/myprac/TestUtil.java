@@ -23,17 +23,17 @@ public class TestUtil {
         memberDao.deleteAllMember();
     }
 
-    public static int getLastIndexMember() {
+    public static Long getLastIndexMember() {
         MemberService memberService = TestUtil.context.getBean("memberService", MemberService.class);
-        int lastIndex = memberService.getLastIndexMember();
+        Long lastIndex = memberService.getLastIndexMember();
         memberService.addMember(new Member("test"+lastIndex, "testPsw", "testName"));
         return memberService.getLastIndexMember();
     }
 
-    public static int getLastIndexArticle() {
+    public static Long getLastIndexArticle() {
         MemberService memberService = TestUtil.context.getBean("memberService", MemberService.class);
         ArticleService articleService = TestUtil.context.getBean("articleService", ArticleService.class);
-        int lastIndexMember = memberService.getLastIndexMember();
+        Long lastIndexMember = memberService.getLastIndexMember();
         articleService.addArticle(new Article(lastIndexMember, "testTitle", "testContents"));
         return articleService.getLastIndexArticle();
     }

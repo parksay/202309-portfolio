@@ -45,10 +45,10 @@ public class CommentServiceImplTest {
     public void setUp() throws ParseException {
         //
         TestUtil.clearTestData();
-        int lastIndexMember1 = TestUtil.getLastIndexMember();
-        int lastIndexMember2 = TestUtil.getLastIndexMember();
-        int lastIndexArticle1 = TestUtil.getLastIndexArticle();
-        int lastIndexArticle2 = TestUtil.getLastIndexArticle();
+        Long lastIndexMember1 = TestUtil.getLastIndexMember();
+        Long lastIndexMember2 = TestUtil.getLastIndexMember();
+        Long lastIndexArticle1 = TestUtil.getLastIndexArticle();
+        Long lastIndexArticle2 = TestUtil.getLastIndexArticle();
         LocalDateTime newTime = LocalDateTime.of(2023, 10, 16, 10, 51, 36);
         this.commentList = Arrays.asList(
                 new Comment(lastIndexMember1, lastIndexArticle1, "testContents1", 0, newTime, newTime),
@@ -180,7 +180,7 @@ public class CommentServiceImplTest {
         }
         Assertions.assertEquals(this.commentList.size(), this.commentService.getCountAllComment());
         // 픽스처 list 에 filter 돌려서 조건에 맞는 item 만으로 구성된 list 새로 만들기
-        int targetMemberIndex = this.commentList.get(0).getMemberSeq();
+        Long targetMemberIndex = this.commentList.get(0).getMemberSeq();
         List<Comment> commentListLocal = this.commentList.stream().filter(e -> e.getMemberSeq() == targetMemberIndex).collect(Collectors.toList());
         // 등록된 comment 중에 member_seq 가 특정 값인 comment 만 list 로 받아오기
         List<Comment> commentListGet = this.commentService.getCommentListByMemberSeq(targetMemberIndex);
@@ -196,7 +196,7 @@ public class CommentServiceImplTest {
     @Test
     public void getCommentListByMemberSeqEmptyTest() {
         // 없으면 null 던지기
-        int lasIndexMember = TestUtil.getLastIndexMember();
+        Long lasIndexMember = TestUtil.getLastIndexMember();
         Assertions.assertNull(this.commentService.getCommentListByMemberSeq(lasIndexMember));
     }
 
@@ -210,13 +210,13 @@ public class CommentServiceImplTest {
         }
         //
         // this.commentList 를 articleSeq1 로 필터링한 리스트와 DB 에서 articleSeq1 꺼내온 리스트가 같은지
-        int articleSeq1 = this.commentList.get(1).getArticleSeq();
+        Long articleSeq1 = this.commentList.get(1).getArticleSeq();
         List<Comment> listGet1 = this.commentService.getCommentListByArticleSeq(articleSeq1);
         List<Comment> listLocal1 = this.commentList.stream().filter((ele)->ele.getArticleSeq() == articleSeq1).collect(Collectors.toList());
         this.checkSameCommentList(listGet1, listLocal1);
         //
         // this.commentList 를 articleSeq2 로 필터링한 리스트와 DB 에서 articleSeq2 꺼내온 리스트가 같은지
-        int articleSeq2 = this.commentList.get(2).getArticleSeq();
+        Long articleSeq2 = this.commentList.get(2).getArticleSeq();
         List<Comment> listGet2 = this.commentService.getCommentListByArticleSeq(articleSeq2);
         List<Comment> listLocal2 = this.commentList.stream().filter((ele)->ele.getArticleSeq() == articleSeq2).collect(Collectors.toList());
         this.checkSameCommentList(listGet2, listLocal2);
@@ -226,7 +226,7 @@ public class CommentServiceImplTest {
     @Test
     public void getCommentListByArticleSeqEmptyTest() {
         //
-        int lasIndexArticle = TestUtil.getLastIndexArticle();
+        Long lasIndexArticle = TestUtil.getLastIndexArticle();
         Assertions.assertNull(this.commentService.getCommentListByArticleSeq(lasIndexArticle));
     }
 
@@ -241,8 +241,8 @@ public class CommentServiceImplTest {
         //
         this.commentService.addComment(this.commentList.get(1));
         this.commentService.addComment(this.commentList.get(2));
-        int articleSeq1 = this.commentList.get(1).getArticleSeq();
-        int articleSeq2 = this.commentList.get(2).getArticleSeq();
+        Long articleSeq1 = this.commentList.get(1).getArticleSeq();
+        Long articleSeq2 = this.commentList.get(2).getArticleSeq();
         Assertions.assertNotEquals(0, this.commentService.getCommentListByArticleSeq(articleSeq1).size());
         Assertions.assertNotEquals(0, this.commentService.getCommentListByArticleSeq(articleSeq2).size());
         //
@@ -258,8 +258,8 @@ public class CommentServiceImplTest {
         //
         this.commentService.addComment(this.commentList.get(2));
         this.commentService.addComment(this.commentList.get(3));
-        int memberSeq1 = this.commentList.get(2).getMemberSeq();
-        int memberSeq2 = this.commentList.get(3).getMemberSeq();
+        Long memberSeq1 = this.commentList.get(2).getMemberSeq();
+        Long memberSeq2 = this.commentList.get(3).getMemberSeq();
         Assertions.assertNotEquals(0, this.commentService.getCommentListByMemberSeq(memberSeq1).size());
         Assertions.assertNotEquals(0, this.commentService.getCommentListByMemberSeq(memberSeq2).size());
         //
@@ -273,8 +273,8 @@ public class CommentServiceImplTest {
     @Test
     public void getCountAllCommentByMemberSeqTest() {
         //
-        int memberSeq2 = this.commentList.get(2).getMemberSeq();
-        int memberSeq3 = this.commentList.get(3).getMemberSeq();
+        Long memberSeq2 = this.commentList.get(2).getMemberSeq();
+        Long memberSeq3 = this.commentList.get(3).getMemberSeq();
         Assertions.assertEquals(0, this.commentService.getCountAllCommentByMemberSeq(memberSeq2));
         Assertions.assertEquals(0, this.commentService.getCountAllCommentByMemberSeq(memberSeq3));
         //
@@ -290,8 +290,8 @@ public class CommentServiceImplTest {
     @Test
     public void getCountAllCommentByArticleSeqTest() {
         //
-        int articleSeq1 = this.commentList.get(1).getArticleSeq();
-        int articleSeq2 = this.commentList.get(2).getArticleSeq();
+        Long articleSeq1 = this.commentList.get(1).getArticleSeq();
+        Long articleSeq2 = this.commentList.get(2).getArticleSeq();
         Assertions.assertEquals(0, this.commentService.getCountAllCommentByArticleSeq(articleSeq1));
         Assertions.assertEquals(0, this.commentService.getCountAllCommentByArticleSeq(articleSeq2));
         //
@@ -308,7 +308,7 @@ public class CommentServiceImplTest {
     private static class TestCommentDao extends CommentDaoJdbc {
         @Override
         public Comment getCommentBySeq(int commentSeq) {
-            super.insertComment(new Comment(1, 3, "test"));
+            super.insertComment(new Comment(1L, 3L, "test"));
             return null;
         }
     }

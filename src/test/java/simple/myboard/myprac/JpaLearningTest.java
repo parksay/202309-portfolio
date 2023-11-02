@@ -13,7 +13,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
-import simple.myboard.myprac.entity.MemberEntity;
+import simple.myboard.myprac.domain.Member;
 import simple.myboard.myprac.entity.TeamEntity;
 import simple.myboard.myprac.repository.MemberRepository;
 
@@ -49,12 +49,12 @@ public class JpaLearningTest {
             tx = em.getTransaction();
             tx.begin();
             ////////////////////////////////////////
-            MemberEntity member1 = new MemberEntity();
-            member1.setName("hello");
-            MemberEntity member2 = new MemberEntity();
-            member2.setName("hello");
-            MemberEntity member3 = new MemberEntity();
-            member3.setName("hello1");
+            Member member1 = new Member();
+            member1.setUserName("hello");
+            Member member2 = new Member();
+            member2.setUserName("hello");
+            Member member3 = new Member();
+            member3.setUserName("hello1");
             em.persist(member1);
             em.persist(member2);
             em.persist(member3);
@@ -82,12 +82,12 @@ public class JpaLearningTest {
     @Test
     public void springDataJpaTest() {
         try {
-            MemberEntity member1 = new MemberEntity();
-            member1.setName("hello");
-            MemberEntity member2 = new MemberEntity();
-            member2.setName("hello");
-            MemberEntity member3 = new MemberEntity();
-            member3.setName("hello1");
+            Member member1 = new Member();
+            member1.setUserName("hello");
+            Member member2 = new Member();
+            member2.setUserName("hello");
+            Member member3 = new Member();
+            member3.setUserName("hello1");
             this.memberRepository.save(member1);
             this.memberRepository.save(member2);
             this.memberRepository.save(member3);
@@ -95,8 +95,8 @@ public class JpaLearningTest {
             this.memberRepository.flush();
             System.out.println("####################### commit ######################");
             ///////////////////////////////////////
-            List<MemberEntity> memberList = this.memberRepository.findAllByName("hello");
-            System.out.println("memberList = " + memberList);
+//            List<Member> memberList = this.memberRepository.findAllByUsername("hello");
+//            System.out.println("memberList = " + memberList);
         } catch (Exception e) {
             e.printStackTrace();
             Assertions.fail();

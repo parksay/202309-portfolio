@@ -6,10 +6,10 @@ public interface ArticleDao {
 
     public abstract void insertArticle(Article article);
     public abstract void updateArticle(Article article);
-    public abstract Article getArticleBySeq(int articleSeq);
-    public abstract void deleteArticleBySeq(int articleSeq);
+    public abstract Article getArticleBySeq(Long articleSeq);
+    public abstract void deleteArticleBySeq(Long articleSeq);
     public abstract int getCountAllArticle();
     public abstract void deleteAllArticle();
-    public abstract void deleteAllArticleByMemberSeq(int memberSeq);
-    public abstract int getLastIndexArticle();
+    public abstract void deleteAllArticleByMemberSeq(Long memberSeq);
+    public abstract Long getLastIndexArticle();
 }

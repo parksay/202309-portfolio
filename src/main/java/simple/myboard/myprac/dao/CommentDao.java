@@ -11,12 +11,12 @@ public interface CommentDao {
     public abstract void updateComment(Comment comment);
     public abstract void deleteCommentBySeq(int commentSeq);
     public abstract int getLastIndexComment();
-    public abstract List<Comment> getCommentListByMemberSeq(int memberSeq);
-    public abstract List<Comment> getCommentListByArticleSeq(int articleSeq);
+    public abstract List<Comment> getCommentListByMemberSeq(Long memberSeq);
+    public abstract List<Comment> getCommentListByArticleSeq(Long articleSeq);
     public abstract void deleteAllComment();
-    public abstract void deleteAllCommentByMemberSeq(int memberSeq);
-    public abstract void deleteAllCommentByArticleSeq(int articleSeq);
+    public abstract void deleteAllCommentByMemberSeq(Long memberSeq);
+    public abstract void deleteAllCommentByArticleSeq(Long articleSeq);
     public abstract int getCountAllComment();
-    public abstract int getCountAllCommentByMemberSeq(int memberSeq);
-    public abstract int getCountAllCommentByArticleSeq(int articleSeq);
+    public abstract int getCountAllCommentByMemberSeq(Long memberSeq);
+    public abstract int getCountAllCommentByArticleSeq(Long articleSeq);
 }

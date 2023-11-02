@@ -5,10 +5,10 @@ import simple.myboard.myprac.domain.Member;
 public interface MemberDao {
 
     public abstract void insertMember(Member member);
-    public abstract Member getMemberBySeq(int memberSeq);
+    public abstract Member getMemberBySeq(Long memberSeq);
     public abstract void updateMember(Member member);
-    public abstract void deleteMemberBySeq(int memberSeq);
+    public abstract void deleteMemberBySeq(Long memberSeq);
     public abstract int getCountAllMember();
     public abstract void deleteAllMember();
-    public abstract int getLastIndexMember();
+    public abstract Long getLastIndexMember();
 }

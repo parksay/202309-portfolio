@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 
 public class Article extends AuditProps {
 
-    private int articleSeq;
-    private int memberSeq;
+    private Long articleSeq;
+    private Long memberSeq;
     private String title;
     private String contents;
 
@@ -13,13 +13,13 @@ public class Article extends AuditProps {
     public Article() {
     }
 
-    public Article(int memberSeq, String title, String contents) {
+    public Article(Long memberSeq, String title, String contents) {
         this.memberSeq = memberSeq;
         this.title = title;
         this.contents = contents;
     }
 
-    public Article(int memberSeq, String title, String contents, int isDel, LocalDateTime createTime, LocalDateTime updateTime) {
+    public Article(Long memberSeq, String title, String contents, int isDel, LocalDateTime createTime, LocalDateTime updateTime) {
         this.articleSeq = articleSeq;
         this.memberSeq = memberSeq;
         this.title = title;
@@ -29,19 +29,19 @@ public class Article extends AuditProps {
         super.setUpdateTime(updateTime);
     }
 
-    public int getArticleSeq() {
+    public Long getArticleSeq() {
         return articleSeq;
     }
 
-    public void setArticleSeq(int articleSeq) {
+    public void setArticleSeq(Long articleSeq) {
         this.articleSeq = articleSeq;
     }
 
-    public int getMemberSeq() {
+    public Long getMemberSeq() {
         return memberSeq;
     }
 
-    public void setMemberSeq(int memberSeq) {
+    public void setMemberSeq(Long memberSeq) {
         this.memberSeq = memberSeq;
     }
 

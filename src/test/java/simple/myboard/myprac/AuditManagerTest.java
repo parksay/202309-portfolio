@@ -43,13 +43,13 @@ public class AuditManagerTest {
     public void addTest() {
         //
         this.memberService.addMember(new Member("testId", "testPsw", "testName"));
-        int lastIndexMember = this.memberService.getLastIndexMember();
+        Long lastIndexMember = this.memberService.getLastIndexMember();
         Member member = this.memberService.getMemberBySeq(lastIndexMember);
         Assertions.assertTrue(member.getCreateTime().plusSeconds(1).isAfter(LocalDateTime.now()));
         Assertions.assertTrue(member.getUpdateTime().plusSeconds(1).isAfter(LocalDateTime.now()));
         //
         this.articleService.addArticle(new Article(lastIndexMember, "testTitle", "testContents"));
-        int lastIndexArticle = this.articleService.getLastIndexArticle();
+        Long lastIndexArticle = this.articleService.getLastIndexArticle();
         Article article = this.articleService.getArticleBySeq(lastIndexArticle);
         Assertions.assertTrue(article.getCreateTime().plusSeconds(1).isAfter(LocalDateTime.now()));
         Assertions.assertTrue(article.getUpdateTime().plusSeconds(1).isAfter(LocalDateTime.now()));
@@ -69,9 +69,9 @@ public class AuditManagerTest {
         // update 시간이 현재 시간이랑 같은지? (1초 이하로 차이나는지?)
         //
         this.memberService.addMember(new Member("testId", "testPsw", "testName"));
-        int lastIndexMember = this.memberService.getLastIndexMember();
+        Long lastIndexMember = this.memberService.getLastIndexMember();
         this.articleService.addArticle(new Article(lastIndexMember, "testTitle", "testContents"));
-        int lastIndexArticle = this.articleService.getLastIndexArticle();
+        Long lastIndexArticle = this.articleService.getLastIndexArticle();
         this.commentService.addComment(new Comment(lastIndexMember, lastIndexArticle, "testContents"));
         try {
             Thread.sleep(3000L);

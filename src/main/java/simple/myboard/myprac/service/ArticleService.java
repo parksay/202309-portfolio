@@ -12,13 +12,13 @@ public interface ArticleService {
 
     public abstract void updateArticle(Article article);
 
-    public abstract Article getArticleBySeq(int seq);
+    public abstract Article getArticleBySeq(Long seq);
 
-    public abstract void deleteArticleBySeq(int articleSeq);
+    public abstract void deleteArticleBySeq(Long articleSeq);
 
-    public abstract void deleteAllArticleByMemberSeq(int articleSeq);
+    public abstract void deleteAllArticleByMemberSeq(Long articleSeq);
 
-    public abstract int getLastIndexArticle();
+    public abstract Long getLastIndexArticle();
 
     public abstract int getCountAllArticle();
 

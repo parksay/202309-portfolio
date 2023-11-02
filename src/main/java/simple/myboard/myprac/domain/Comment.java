@@ -4,22 +4,22 @@ import java.time.LocalDateTime;
 
 public class Comment extends AuditProps {
 
-    private int commentSeq;
-    private int articleSeq;
-    private int memberSeq;
+    private Long commentSeq;
+    private Long articleSeq;
+    private Long memberSeq;
     private String contents;
 
     public Comment() {
     }
 
-    public Comment(int memberSeq, int articleSeq, String contents) {
+    public Comment(Long memberSeq, Long articleSeq, String contents) {
         this.memberSeq = memberSeq;
         this.articleSeq = articleSeq;
         this.contents = contents;
     }
 
 
-    public Comment(int memberSeq, int articleSeq, String contents, int isDel, LocalDateTime createTime, LocalDateTime updateTime) {
+    public Comment(Long memberSeq, Long articleSeq, String contents, int isDel, LocalDateTime createTime, LocalDateTime updateTime) {
         this.memberSeq = memberSeq;
         this.articleSeq = articleSeq;
         this.contents = contents;
@@ -28,27 +28,27 @@ public class Comment extends AuditProps {
         super.setUpdateTime(updateTime);
     }
 
-    public int getCommentSeq() {
+    public Long getCommentSeq() {
         return commentSeq;
     }
 
-    public void setCommentSeq(int commentSeq) {
+    public void setCommentSeq(Long commentSeq) {
         this.commentSeq = commentSeq;
     }
 
-    public int getArticleSeq() {
+    public Long getArticleSeq() {
         return articleSeq;
     }
 
-    public void setArticleSeq(int articleSeq) {
+    public void setArticleSeq(Long articleSeq) {
         this.articleSeq = articleSeq;
     }
 
-    public int getMemberSeq() {
+    public Long getMemberSeq() {
         return memberSeq;
     }
 
-    public void setMemberSeq(int memberSeq) {
+    public void setMemberSeq(Long memberSeq) {
         this.memberSeq = memberSeq;
     }
 

@@ -20,7 +20,6 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     public void addArticle(Article article) {
-        // TODO - null check 여기서 하기
         this.articleDao.insertArticle(article);
     }
 
@@ -28,7 +27,7 @@ public class ArticleServiceImpl implements ArticleService {
         this.articleDao.updateArticle(article);
     }
 
-    public Article getArticleBySeq(int seq) {
+    public Article getArticleBySeq(Long seq) {
         try {
             return this.articleDao.getArticleBySeq(seq);
         } catch (EmptyResultDataAccessException e) {
@@ -36,17 +35,17 @@ public class ArticleServiceImpl implements ArticleService {
         }
     }
 
-    public void deleteArticleBySeq(int articleSeq) {
+    public void deleteArticleBySeq(Long articleSeq) {
         this.commentService.deleteAllCommentByArticleSeq(articleSeq);
         this.articleDao.deleteArticleBySeq(articleSeq);
     }
 
-    public void deleteAllArticleByMemberSeq(int memberSeq) {
+    public void deleteAllArticleByMemberSeq(Long memberSeq) {
         this.commentService.deleteAllCommentByMemberSeq(memberSeq);
         this.articleDao.deleteAllArticleByMemberSeq(memberSeq);
     }
 
-    public int getLastIndexArticle() {
+    public Long getLastIndexArticle() {
         return this.articleDao.getLastIndexArticle();
     }
 

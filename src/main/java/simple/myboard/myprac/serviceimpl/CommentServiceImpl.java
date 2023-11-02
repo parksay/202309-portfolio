@@ -46,7 +46,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> getCommentListByMemberSeq(int memberSeq) {
+    public List<Comment> getCommentListByMemberSeq(Long memberSeq) {
         List<Comment> commentList = this.commentDao.getCommentListByMemberSeq(memberSeq);
         if(commentList.size() < 1) {
             return null;
@@ -55,7 +55,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> getCommentListByArticleSeq(int articleSeq) {
+    public List<Comment> getCommentListByArticleSeq(Long articleSeq) {
         List<Comment> commentList = this.commentDao.getCommentListByArticleSeq(articleSeq);
         if(commentList.size() < 1) {
             return null;
@@ -69,12 +69,12 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void deleteAllCommentByMemberSeq(int memberSeq) {
+    public void deleteAllCommentByMemberSeq(Long memberSeq) {
         this.commentDao.deleteAllCommentByMemberSeq(memberSeq);
     }
 
     @Override
-    public void deleteAllCommentByArticleSeq(int articleSeq) {
+    public void deleteAllCommentByArticleSeq(Long articleSeq) {
         this.commentDao.deleteAllCommentByArticleSeq(articleSeq);
     }
 
@@ -84,12 +84,12 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public int getCountAllCommentByMemberSeq(int memberSeq) {
+    public int getCountAllCommentByMemberSeq(Long memberSeq) {
         return this.commentDao.getCountAllCommentByMemberSeq(memberSeq);
     }
 
     @Override
-    public int getCountAllCommentByArticleSeq(int articleSeq) {
+    public int getCountAllCommentByArticleSeq(Long articleSeq) {
         return this.commentDao.getCountAllCommentByArticleSeq(articleSeq);
     }
 }

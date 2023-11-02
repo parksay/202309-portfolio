@@ -36,7 +36,7 @@ public class ArticleDaoJdbcTest {
         this.articleDao = new ArticleDaoJdbc();
         this.articleDao.setDataSource(dataSource);
         TestUtil.clearTestData();
-        int lastIndexMember = TestUtil.getLastIndexMember();
+        Long lastIndexMember = TestUtil.getLastIndexMember();
         //
         String pattern = "yyyy-MM-dd HH:mm:ss"; // LocalDateTime 을 formatter 로 변환해 보기
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
@@ -65,7 +65,7 @@ public class ArticleDaoJdbcTest {
         this.articleDao.insertArticle(this.articleList.get(2));
         Assertions.assertEquals(3, this.articleDao.getCountAllArticle());
         //
-        int lastIndex = this.articleDao.getLastIndexArticle();
+        Long lastIndex = this.articleDao.getLastIndexArticle();
         Assertions.assertEquals(this.articleList.get(0).getContents(), this.articleDao.getArticleBySeq(lastIndex-2).getContents());
         Assertions.assertEquals(this.articleList.get(1).getContents(), this.articleDao.getArticleBySeq(lastIndex-1).getContents());
         Assertions.assertEquals(this.articleList.get(2).getContents(), this.articleDao.getArticleBySeq(lastIndex).getContents());
@@ -76,7 +76,7 @@ public class ArticleDaoJdbcTest {
         //
         Article article0 = this.articleList.get(0);
         this.articleDao.insertArticle(article0);
-        int lastIndex1 = this.articleDao.getLastIndexArticle();
+        Long lastIndex1 = this.articleDao.getLastIndexArticle();
         article0.setArticleSeq(lastIndex1);
         Article article1 = this.articleDao.getArticleBySeq(lastIndex1);
         this.checkSameArticle(article0, article1);
@@ -90,7 +90,7 @@ public class ArticleDaoJdbcTest {
         article1.setUpdateTime(newTime);
         //
         this.articleDao.updateArticle(article1);
-        int lastIndex2 = this.articleDao.getLastIndexArticle();
+        Long lastIndex2 = this.articleDao.getLastIndexArticle();
         Article article2 = this.articleDao.getArticleBySeq(lastIndex2);
 
         //
@@ -107,7 +107,7 @@ public class ArticleDaoJdbcTest {
         this.articleDao.insertArticle(article1);
         this.articleDao.insertArticle(article2);
         //
-        int lastIndex = this.articleDao.getLastIndexArticle();
+        Long lastIndex = this.articleDao.getLastIndexArticle();
         Article article3 = this.articleDao.getArticleBySeq(lastIndex-1);
         Article article4 = this.articleDao.getArticleBySeq(lastIndex);
         // check same
@@ -131,7 +131,7 @@ public class ArticleDaoJdbcTest {
         this.articleDao.insertArticle(article3);
         this.articleDao.insertArticle(article4);
         //
-        int lastIndex = this.articleDao.getLastIndexArticle();
+        Long lastIndex = this.articleDao.getLastIndexArticle();
         //
         this.articleDao.deleteArticleBySeq(lastIndex);
         Assertions.assertEquals(lastIndex-1, this.articleDao.getLastIndexArticle());

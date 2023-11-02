@@ -24,8 +24,8 @@ public class ArticleDaoJdbc implements ArticleDao {
         @Override
         public Article mapRow(ResultSet rs, int rowNum) throws SQLException {
             Article article = new Article();
-            article.setArticleSeq(rs.getInt("article_seq"));
-            article.setMemberSeq(rs.getInt("member_seq"));
+            article.setArticleSeq(rs.getLong("article_seq"));
+            article.setMemberSeq(rs.getLong("member_seq"));
             article.setTitle(rs.getString("title"));
             article.setContents(rs.getString("contents"));
             article.setIsDel(rs.getInt("is_del"));
@@ -71,17 +71,17 @@ public class ArticleDaoJdbc implements ArticleDao {
     }
 
     @Override
-    public Article getArticleBySeq(int articleSeq) {
+    public Article getArticleBySeq(Long articleSeq) {
         return this.jdbcTemplate.queryForObject("SELECT * FROM TB_ARTICLE WHERE article_seq = ?", this.rowMapper, new Object[] {articleSeq});
     }
 
     @Override
-    public void deleteArticleBySeq(int articleSeq) {
+    public void deleteArticleBySeq(Long articleSeq) {
         this.jdbcTemplate.update("DELETE FROM TB_ARTICLE WHERE article_seq = ?", articleSeq);
     }
 
     @Override
-    public void deleteAllArticleByMemberSeq(int memberSeq) {
+    public void deleteAllArticleByMemberSeq(Long memberSeq) {
         this.jdbcTemplate.update("DELETE FROM TB_ARTICLE WHERE member_seq = ?", memberSeq);
     }
 
@@ -110,7 +110,7 @@ public class ArticleDaoJdbc implements ArticleDao {
     }
 
     @Override
-    public int getLastIndexArticle() {
+    public Long getLastIndexArticle() {
         return this.jdbcTemplate.query(
                 new PreparedStatementCreator() {
                     @Override
@@ -118,11 +118,11 @@ public class ArticleDaoJdbc implements ArticleDao {
                         return con.prepareStatement("SELECT MAX(ARTICLE_SEQ) FROM TB_ARTICLE");
                     }
                 },
-                new ResultSetExtractor<Integer>() {
+                new ResultSetExtractor<Long>() {
                     @Override
-                    public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
+                    public Long extractData(ResultSet rs) throws SQLException, DataAccessException {
                         rs.next();
-                        return rs.getInt(1);
+                        return Long.valueOf(rs.getInt(1));
                     }
                 }
         );

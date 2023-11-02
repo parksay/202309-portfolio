@@ -36,10 +36,10 @@ public class CommentDaoJdbcTest {
         this.commentDao = context.getBean("commentDao", CommentDao.class);
         //
         TestUtil.clearTestData();
-        int lastIndexMember1 = TestUtil.getLastIndexMember();
-        int lastIndexMember2 = TestUtil.getLastIndexMember();
-        int lastIndexArticle1 = TestUtil.getLastIndexArticle();
-        int lastIndexArticle2 = TestUtil.getLastIndexArticle();
+        Long lastIndexMember1 = TestUtil.getLastIndexMember();
+        Long lastIndexMember2 = TestUtil.getLastIndexMember();
+        Long lastIndexArticle1 = TestUtil.getLastIndexArticle();
+        Long lastIndexArticle2 = TestUtil.getLastIndexArticle();
         LocalDateTime newTime = LocalDateTime.of(2023, 10, 16, 10, 51, 36);
         this.commentList = Arrays.asList(
                 new Comment(lastIndexMember1, lastIndexArticle1, "testContents1", 0, newTime, newTime),
@@ -170,7 +170,7 @@ public class CommentDaoJdbcTest {
         }
         Assertions.assertEquals(this.commentList.size(), this.commentDao.getCountAllComment());
         // 픽스처 list 에 filter 돌려서 조건에 맞는 item 만으로 구성된 list 새로 만들기
-        int targetMemberIndex = this.commentList.get(0).getMemberSeq();
+        Long targetMemberIndex = this.commentList.get(0).getMemberSeq();
         List<Comment> commentListLocal = this.commentList.stream().filter(e -> e.getMemberSeq() == targetMemberIndex).collect(Collectors.toList());
         // 등록된 comment 중에 member_seq 가 특정 값인 comment 만 list 로 받아오기
         List<Comment> commentListGet = this.commentDao.getCommentListByMemberSeq(targetMemberIndex);
@@ -194,13 +194,13 @@ public class CommentDaoJdbcTest {
         }
         //
         // this.commentList 를 articleSeq1 로 필터링한 리스트와 DB 에서 articleSeq1 꺼내온 리스트가 같은지
-        int articleSeq1 = this.commentList.get(1).getArticleSeq();
+        Long articleSeq1 = this.commentList.get(1).getArticleSeq();
         List<Comment> listGet1 = this.commentDao.getCommentListByArticleSeq(articleSeq1);
         List<Comment> listLocal1 = this.commentList.stream().filter((ele)->ele.getArticleSeq() == articleSeq1).collect(Collectors.toList());
         this.checkSameCommentList(listGet1, listLocal1);
         //
         // this.commentList 를 articleSeq2 로 필터링한 리스트와 DB 에서 articleSeq2 꺼내온 리스트가 같은지
-        int articleSeq2 = this.commentList.get(2).getArticleSeq();
+        Long articleSeq2 = this.commentList.get(2).getArticleSeq();
         List<Comment> listGet2 = this.commentDao.getCommentListByArticleSeq(articleSeq2);
         List<Comment> listLocal2 = this.commentList.stream().filter((ele)->ele.getArticleSeq() == articleSeq2).collect(Collectors.toList());
         this.checkSameCommentList(listGet2, listLocal2);
@@ -219,8 +219,8 @@ public class CommentDaoJdbcTest {
         //
         this.commentDao.insertComment(this.commentList.get(1));
         this.commentDao.insertComment(this.commentList.get(2));
-        int articleSeq1 = this.commentList.get(1).getArticleSeq();
-        int articleSeq2 = this.commentList.get(2).getArticleSeq();
+        Long articleSeq1 = this.commentList.get(1).getArticleSeq();
+        Long articleSeq2 = this.commentList.get(2).getArticleSeq();
         Assertions.assertNotEquals(0, this.commentDao.getCommentListByArticleSeq(articleSeq1).size());
         Assertions.assertNotEquals(0, this.commentDao.getCommentListByArticleSeq(articleSeq2).size());
         //
@@ -236,8 +236,8 @@ public class CommentDaoJdbcTest {
         //
         this.commentDao.insertComment(this.commentList.get(2));
         this.commentDao.insertComment(this.commentList.get(3));
-        int memberSeq1 = this.commentList.get(2).getMemberSeq();
-        int memberSeq2 = this.commentList.get(3).getMemberSeq();
+        Long memberSeq1 = this.commentList.get(2).getMemberSeq();
+        Long memberSeq2 = this.commentList.get(3).getMemberSeq();
         Assertions.assertNotEquals(0, this.commentDao.getCommentListByMemberSeq(memberSeq1).size());
         Assertions.assertNotEquals(0, this.commentDao.getCommentListByMemberSeq(memberSeq2).size());
         //
@@ -251,8 +251,8 @@ public class CommentDaoJdbcTest {
     @Test
     public void getCountAllCommentByMemberSeqTest() {
         //
-        int memberSeq2 = this.commentList.get(2).getMemberSeq();
-        int memberSeq3 = this.commentList.get(3).getMemberSeq();
+        Long memberSeq2 = this.commentList.get(2).getMemberSeq();
+        Long memberSeq3 = this.commentList.get(3).getMemberSeq();
         Assertions.assertEquals(0, this.commentDao.getCountAllCommentByMemberSeq(memberSeq2));
         Assertions.assertEquals(0, this.commentDao.getCountAllCommentByMemberSeq(memberSeq3));
         //
@@ -268,8 +268,8 @@ public class CommentDaoJdbcTest {
     @Test
     public void getCountAllCommentByArticleSeqTest() {
         //
-        int articleSeq1 = this.commentList.get(1).getArticleSeq();
-        int articleSeq2 = this.commentList.get(2).getArticleSeq();
+        Long articleSeq1 = this.commentList.get(1).getArticleSeq();
+        Long articleSeq2 = this.commentList.get(2).getArticleSeq();
         Assertions.assertEquals(0, this.commentDao.getCountAllCommentByArticleSeq(articleSeq1));
         Assertions.assertEquals(0, this.commentDao.getCountAllCommentByArticleSeq(articleSeq2));
         //

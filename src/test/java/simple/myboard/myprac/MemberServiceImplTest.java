@@ -67,7 +67,7 @@ public class MemberServiceImplTest {
         this.memberService.addMember(member2);
         Assertions.assertEquals(3, this.memberDao.getCountAllMember());
         //
-        int lastIndex = this.memberService.getLastIndexMember();
+        Long lastIndex = this.memberService.getLastIndexMember();
         Member member4 = this.memberService.getMemberBySeq(lastIndex);
         Assertions.assertEquals(0, member4.getIsDel());
         Assertions.assertNotNull(member4.getCreateTime());
@@ -77,7 +77,7 @@ public class MemberServiceImplTest {
 
     @Test
     public void getMemberEmptyTest() {
-        int lastIndex = this.memberService.getLastIndexMember();
+        Long lastIndex = this.memberService.getLastIndexMember();
         Member emptyMember = this.memberService.getMemberBySeq(lastIndex + 1);
         Assertions.assertNull(emptyMember);
     }
@@ -88,7 +88,7 @@ public class MemberServiceImplTest {
         //
         Member member0 = this.memberList.get(0);
         this.memberService.addMember(member0);
-        int lastIndex1 = this.memberService.getLastIndexMember();
+        Long lastIndex1 = this.memberService.getLastIndexMember();
         Member member1 = this.memberService.getMemberBySeq(lastIndex1);
         this.checkSameMember(member0, member1);
 
@@ -99,7 +99,7 @@ public class MemberServiceImplTest {
         member1.setIsDel(1);
         this.memberService.updateMember(member1);
         //
-        int lastIndex2 = this.memberService.getLastIndexMember();
+        Long lastIndex2 = this.memberService.getLastIndexMember();
         Assertions.assertEquals(lastIndex2, lastIndex1);
         Member member2 = this.memberService.getMemberBySeq(lastIndex2);
         this.checkSameMember(member1, member2);
@@ -123,14 +123,14 @@ public class MemberServiceImplTest {
         this.memberService.addMember(this.memberList.get(2));
         Assertions.assertEquals(3, this.memberDao.getCountAllMember());
         //
-        int lastIndex0 = this.memberService.getLastIndexMember();
+        Long lastIndex0 = this.memberService.getLastIndexMember();
         this.memberService.deleteMemberBySeq(lastIndex0);
         Assertions.assertEquals(2, this.memberDao.getCountAllMember());
-        int lastIndex1 = this.memberService.getLastIndexMember();
+        Long lastIndex1 = this.memberService.getLastIndexMember();
         Assertions.assertEquals(lastIndex1, lastIndex0 - 1);
         this.memberService.deleteMemberBySeq(lastIndex1);
         Assertions.assertEquals(1, this.memberDao.getCountAllMember());
-        int lastIndex2 = this.memberService.getLastIndexMember();
+        Long lastIndex2 = this.memberService.getLastIndexMember();
         Assertions.assertEquals(lastIndex2, lastIndex1 - 1);
         this.memberService.deleteMemberBySeq(lastIndex2);
         Assertions.assertEquals(0, this.memberDao.getCountAllMember());
@@ -142,10 +142,10 @@ public class MemberServiceImplTest {
         // member2 만 삭제 후에 lastIndex 와 countAll 이 맞는지 확인
         Member member1 = this.memberList.get(0);
         this.memberService.addMember(member1);
-        int lastIndexMember1 = this.memberService.getLastIndexMember();
+        Long lastIndexMember1 = this.memberService.getLastIndexMember();
         Member member2 = this.memberList.get(1);
         this.memberService.addMember(member2);
-        int lastIndexMember2 = this.memberService.getLastIndexMember();
+        Long lastIndexMember2 = this.memberService.getLastIndexMember();
         List<Article> articleList1 = Arrays.asList(
                 new Article(lastIndexMember1, "title1", "test1"),
                 new Article(lastIndexMember1, "title2", "test2"),
@@ -160,12 +160,12 @@ public class MemberServiceImplTest {
         while(iter1.hasNext()) {
             this.articleService.addArticle(iter1.next());
         }
-        int lastIndexArticleBefore = this.articleService.getLastIndexArticle();
+        Long lastIndexArticleBefore = this.articleService.getLastIndexArticle();
         Iterator<Article> iter2 = articleList2.iterator();
         while(iter2.hasNext()) {
             this.articleService.addArticle(iter2.next());
         }
-        int lastIndexArticleAfter = this.articleService.getLastIndexArticle();
+        Long lastIndexArticleAfter = this.articleService.getLastIndexArticle();
         //
         Assertions.assertTrue(lastIndexArticleBefore < lastIndexArticleAfter);
         this.memberService.deleteMemberBySeq(lastIndexMember2);
@@ -178,7 +178,7 @@ public class MemberServiceImplTest {
         // 3개를 등록 후에 삭제하다가 예외 발생 - 그대로인지?
         Member member = this.memberList.get(0);
         this.memberService.addMember(member);
-        int lastIndexMember = this.memberService.getLastIndexMember();
+        Long lastIndexMember = this.memberService.getLastIndexMember();
         List<Article> aticleList = Arrays.asList(
                 new Article(lastIndexMember, "title1", "test1"),
                 new Article(lastIndexMember, "title2", "test2"),
@@ -188,7 +188,7 @@ public class MemberServiceImplTest {
         while(iter.hasNext()) {
             this.articleService.addArticle(iter.next());
         }
-        int lastIndexArticleBefore = this.articleService.getLastIndexArticle();
+        Long lastIndexArticleBefore = this.articleService.getLastIndexArticle();
         //
         ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
         MemberServiceImpl testMemberService = context.getBean("memberService", MemberServiceImpl.class);
@@ -210,14 +210,14 @@ public class MemberServiceImplTest {
         testMemberDao.setDataSource(dataSource);
         MemberService testMemberService = context.getBean("memberService", MemberService.class);
         testMemberService.setMemberDao(testMemberDao);
-        Assertions.assertThrows(TransientDataAccessResourceException.class, ()->{testMemberService.getMemberBySeq(0);});
+        Assertions.assertThrows(TransientDataAccessResourceException.class, ()->{testMemberService.getMemberBySeq(0L);});
 
     }
 
     @Test
     public void deleteIntegrityFailTest() {
         this.memberService.addMember(this.memberList.get(0));
-        int lastIndex = this.memberService.getLastIndexMember();
+        Long lastIndex = this.memberService.getLastIndexMember();
         this.articleService.addArticle(new Article(lastIndex, "test", "test"));
         Assertions.assertThrows(DataIntegrityViolationException.class, ()->{
             this.memberService.deleteMemberBySeq(lastIndex);
@@ -229,12 +229,12 @@ public class MemberServiceImplTest {
 
     private static class TestMemberDao extends MemberDaoJdbc {
         @Override
-        public Member getMemberBySeq(int memberSeq) {
+        public Member getMemberBySeq(Long memberSeq) {
             super.insertMember(new Member("test", "test", "test"));
             return null;
         }
         @Override
-        public void deleteMemberBySeq(int memberSeq) {
+        public void deleteMemberBySeq(Long memberSeq) {
             super.deleteMemberBySeq(memberSeq);
             throw new MemberServiceTestException();
         }

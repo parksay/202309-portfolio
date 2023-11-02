@@ -28,9 +28,9 @@ public class CommentDaoJdbc implements CommentDao {
         @Override
         public Comment mapRow(ResultSet rs, int rowNum) throws SQLException {
             Comment comment = new Comment();
-            comment.setCommentSeq(rs.getInt("comment_seq"));
-            comment.setArticleSeq(rs.getInt("article_seq"));
-            comment.setMemberSeq(rs.getInt("member_seq"));
+            comment.setCommentSeq(rs.getLong("comment_seq"));
+            comment.setArticleSeq(rs.getLong("article_seq"));
+            comment.setMemberSeq(rs.getLong("member_seq"));
             comment.setContents(rs.getString("contents"));
             comment.setIsDel(rs.getInt("is_del"));
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -84,12 +84,12 @@ public class CommentDaoJdbc implements CommentDao {
     }
 
     @Override
-    public List<Comment> getCommentListByMemberSeq(int memberSeq) {
+    public List<Comment> getCommentListByMemberSeq(Long memberSeq) {
         return this.jdbcTemplate.query("SELECT * FROM TB_COMMENT WHERE member_seq = ?", this.rowMapper, new Object[] {memberSeq});
     }
 
     @Override
-    public List<Comment> getCommentListByArticleSeq(int articleSeq) {
+    public List<Comment> getCommentListByArticleSeq(Long articleSeq) {
         return this.jdbcTemplate.query("SELECT * FROM TB_COMMENT WHERE article_seq = ?", this.rowMapper, new Object[] {articleSeq});
 
     }
@@ -100,12 +100,12 @@ public class CommentDaoJdbc implements CommentDao {
     }
 
     @Override
-    public void deleteAllCommentByMemberSeq(int memberSeq) {
+    public void deleteAllCommentByMemberSeq(Long memberSeq) {
         this.jdbcTemplate.update("DELETE FROM TB_COMMENT WHERE member_seq = ?", new Object[] {memberSeq});
     }
 
     @Override
-    public void deleteAllCommentByArticleSeq(int articleSeq) {
+    public void deleteAllCommentByArticleSeq(Long articleSeq) {
         this.jdbcTemplate.update("DELETE FROM TB_COMMENT WHERE article_seq = ?", new Object[] {articleSeq});
 
     }
@@ -116,13 +116,13 @@ public class CommentDaoJdbc implements CommentDao {
     }
 
     @Override
-    public int getCountAllCommentByMemberSeq(int memberSeq) {
+    public int getCountAllCommentByMemberSeq(Long memberSeq) {
         return this.jdbcTemplate.query("SELECT COUNT(*) FROM TB_COMMENT WHERE member_seq = ?", (rs)->{ rs.next(); return rs.getInt(1); }, new Object[] {memberSeq});
 
     }
 
     @Override
-    public int getCountAllCommentByArticleSeq(int articleSeq) {
+    public int getCountAllCommentByArticleSeq(Long articleSeq) {
         return this.jdbcTemplate.query("SELECT COUNT(*) FROM TB_COMMENT WHERE article_seq = ?", (rs)->{ rs.next(); return rs.getInt(1); }, new Object[] {articleSeq});
 
     }

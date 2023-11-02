@@ -1,10 +1,16 @@
 package simple.myboard.myprac.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+
 import java.time.LocalDateTime;
 
+@Entity
 public class Member extends AuditProps {
 
-    private int memberSeq;
+    @Id @GeneratedValue
+    private Long memberSeq;
     private String userId;
     private String userPsw;
     private String userName;
@@ -30,11 +36,11 @@ public class Member extends AuditProps {
         super.setUpdateTime(updateTime);
     }
 
-    public int getMemberSeq() {
+    public Long getMemberSeq() {
         return memberSeq;
     }
 
-    public void setMemberSeq(int memberSeq) {
+    public void setMemberSeq(Long memberSeq) {
         this.memberSeq = memberSeq;
     }
 
