@@ -11,7 +11,7 @@
             <property name="jakarta.persistence.jdbc.password" value="0000"/>
 
 
-            <property name="jakarta.persistence.schema-generation.database.action" value="create-drop"/>
+            <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
